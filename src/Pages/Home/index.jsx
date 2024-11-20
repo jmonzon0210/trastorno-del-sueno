@@ -5,7 +5,7 @@ function Home() {
     <Layout>
       <div className="flex flex-col md:flex-row md:items-center items-start justify-center m-auto h-auto">
         <div className="w-full md:w-1/2">
-          <img src="img.jpeg" alt="" className="w-full h-auto rounded-lg" />
+          <img src="img2.jpeg" alt="" className="w-full h-auto rounded-lg" />
         </div>
         <div className="w-full md:w-1/2 flex flex-col items-center justify-center text-center m-auto mt-4 md:mt-0">
           <h1 className="text-3xl font-bold">
