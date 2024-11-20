@@ -17,12 +17,12 @@ function Home() {
             pediátricos, ayudando a mejorar el diagnóstico y tratamiento
             temprano.
           </p>
-
-
-
-
-          
           <p className="text-xl mt-4">
+            <br>
+
+
+
+              </br>
             <strong>Creado por:</strong>
             <br />
             Dra. Grethel Camejo Sampedro <br />
