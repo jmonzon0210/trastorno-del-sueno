@@ -17,6 +17,11 @@ function Home() {
             pediátricos, ayudando a mejorar el diagnóstico y tratamiento
             temprano.
           </p>
+
+
+
+
+          
           <p className="text-xl mt-4">
             <strong>Creado por:</strong>
             <br />
