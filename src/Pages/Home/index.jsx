@@ -21,7 +21,7 @@ function Home() {
             <strong>Creado por:</strong>
             <br />
             Dra. Grethel Camejo Sampedro <br />
-            José Daniel Monzón Rodríguez
+          
           </p>
         </div>
       </div>
