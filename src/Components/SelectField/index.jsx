@@ -7,8 +7,7 @@ const SelectField = ({ name, label, value, handleChange, error, touched }) => {
       ? [
           { value: 0, label: "Masculino" },
           { value: 1, label: "Femenino" },
-        ]
-        
+        ]  
       : [
           { value: 0, label: "No" },
           { value: 1, label: "Sí" },
