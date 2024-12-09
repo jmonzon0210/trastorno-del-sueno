@@ -170,7 +170,10 @@ const EvalForm = () => {
           cefalea: 0,
           res_insulina: 0,
           depresion: 0,
-          tratamiento: 0,
+          higienico-dietetico: 0,
+          cognitivo-conductual: 0,
+          medicamentoso :0,
+          
         }}
         validationSchema={formSchema}
         onSubmit={handleSubmit}
@@ -314,12 +317,28 @@ const EvalForm = () => {
                 touched={touched.depresion}
               />
               <SelectField
-                name="tratamiento"
-                label="Tratamiento"
-                value={values.tratamiento}
+                name="medicamentoso"
+                label="Medicamentoso"
+                value={values.cognitivo-conductual}
                 handleChange={handleChange}
-                error={errors.tratamiento}
-                touched={touched.tratamiento}
+                error={errors.medicamentoso}
+                touched={touched.medicamentoso}
+              />
+               <SelectField
+                name="cognitivo-conductual"
+                label="Cognitivo-conductual"
+                value={values.cognititivo-conductual}
+                handleChange={handleChange}
+                error={errors.cognitivo-conductual}
+                touched={touched.cognitivo-conductual}
+              />
+               <SelectField
+                name="medicamentoso"
+                label="Medicamentoso"
+                value={values.medicamentoso}
+                handleChange={handleChange}
+                error={errors.medicamentoso}
+                touched={touched.medicamentoso}
               />
             </div>
             <button
