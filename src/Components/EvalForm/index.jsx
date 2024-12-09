@@ -333,12 +333,12 @@ const EvalForm = () => {
                 touched={touched.cognitivo-conductual}
               />
                <SelectField
-                name="medicamentoso"
-                label="Medicamentoso"
-                value={values.medicamentoso}
+                name="higienico-dietetico"
+                label="Higiénico-Dietético"
+                value={values.higienico-dietetico}
                 handleChange={handleChange}
-                error={errors.medicamentoso}
-                touched={touched.medicamentoso}
+                error={errors.higienico-dietetico}
+                touched={touched.higienico-dietetico}
               />
             </div>
             <button
