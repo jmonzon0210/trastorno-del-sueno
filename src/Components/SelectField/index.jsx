@@ -8,12 +8,7 @@ const SelectField = ({ name, label, value, handleChange, error, touched }) => {
           { value: 0, label: "Masculino" },
           { value: 1, label: "Femenino" },
         ]
-        : name === "tratamiento"
-        ? [
-            { value: 0, label: "Higiénico-Dietético" },
-            { value: 1, label: "Cognitivo-Conductual" },
-            { value: 3, label: "Medicamentoso" },
-          ]
+        
       : [
           { value: 0, label: "No" },
           { value: 1, label: "Sí" },
