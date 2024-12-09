@@ -14,7 +14,7 @@ const NavBar = () => {
               isActive ? activeStyle : "text-gray-700 hover:text-blue-500"
             }
           >
-            TS-APP
+            Inicio
           </NavLink>
         </li>
         <li>
