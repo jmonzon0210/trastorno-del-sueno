@@ -70,74 +70,60 @@ const EvalForm = () => {
      loadModel();
    }, []);
 
-  // const handleSubmit = async (values, { resetForm }) => {
-  //   const fieldOrder = [
-  //     "sexo",
-  //     "edad",
-  //     "ecv",
-  //     "tabaquismo",
-  //     "epoc",
-  //     "ecev",
-  //     "cancer",
-  //     "enf_art_perif",
-  //     "obesidad",
-  //     "desnutricion",
-  //     "dislipidemia",
-  //     "erpad",
-  //     "dm",
-  //     "hta",
-  //     "glomerulopatia",
-  //     "tas",
-  //     "tad",
-  //     "fc",
-  //     "hb",
-  //     "albumina",
-  //     "urea",
-  //     "creatinina",
-  //     "fg",
-  //     "acido_urico",
-  //     "glucemia",
-  //     "colesterol",
-  //     "tgo",
-  //     "tgp",
-  //     "calcio",
-  //     "potasio",
-  //     "atencion_nefrologica",
-  //     "inicio_tardio",
-  //     "ccv",
-  //   ];
+   const handleSubmit = async (values, { resetForm }) => {
+     const fieldOrder = [
+        "edad",
+         "sexo",
+          "ant_patologicos_fam",
+          "ant_pre_peri_postnatales_positivos",
+          "alteraciones_anatomicas",
+          "consumo_medicamentos",
+          "consumo_toxicos",
+          "exp_medios_pantallas",
+          "trastorno_neurodesarrollo",
+          "obesidad",
+          "hipertension_arterial",
+          "trastornos_aprendizaje",
+          "trastornos_comportamiento",
+          "cefalea",
+          "res_insulina",
+          "depresion",
+          "medicamentoso",
+          "cognitivo_conductual",
+          "higienico_dietetico",
+     ];
 
   //   // Obtener y ordenar los valores del formulario
-  //   const orderedValues = fieldOrder.map((field) => {
-  //     const value = values[field];
-  //     return typeof value === "string" ? Number(value) : value;
-  //   });
+     const orderedValues = fieldOrder.map((field) => {
+       const value = values[field];
+       return typeof value === "string" ? Number(value) : value;
+     });
 
   //   // Estandarizar los valores
-  //   const standardizedValues = standardize(orderedValues);
+     const standardizedValues = standardize(orderedValues);
 
-  //   console.log(standardizedValues);
+     console.log(standardizedValues);
 
   //   // Llamar a la función de predicción con los valores estandarizados
-  //   const result = await predict(standardizedValues);
+     const result = await predict(standardizedValues);
 
   //   // Procesar el resultado de la predicción
-  //   const mortalityRate = handlePredictionResult(result);
+     const mortalityRate = handlePredictionResult(result);
 
   //   // Mostrar el resultado de la predicción
-  //   setPrediction(mortalityRate);
+     setPrediction(mortalityRate);
 
-  //   setIsModalOpen(true);
+     setIsModalOpen(true);
 
   //   // Reiniciar el formulario
-  //   // resetForm();
-  // };
+      resetForm();
+   };
 
   const handleSubmit = () => {
     setIsModalOpen(true);
 
     // Reiniciar el formulario
-    // resetForm();
+     resetForm();
   };
 
   const closeModal = () => {
