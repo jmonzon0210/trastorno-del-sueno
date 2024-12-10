@@ -170,9 +170,9 @@ const EvalForm = () => {
           cefalea: 0,
           res_insulina: 0,
           depresion: 0,
-          higienico-dietetico: 0,
-          cognitivo-conductual: 0,
           medicamentoso :0,
+          cognitivo_conductual :0,
+          higienico_dietetico :0,
           
         }}
         validationSchema={formSchema}
@@ -319,26 +319,26 @@ const EvalForm = () => {
               <SelectField
                 name="medicamentoso"
                 label="Medicamentoso"
-                value={values.cognitivo-conductual}
+                value={values.medicamentoso}
                 handleChange={handleChange}
                 error={errors.medicamentoso}
                 touched={touched.medicamentoso}
               />
                <SelectField
-                name="cognitivo-conductual"
+                name="cognitivo_conductual"
                 label="Cognitivo-conductual"
-                value={values.cognititivo-conductual}
+                value={values.cognititivo_conductual}
                 handleChange={handleChange}
-                error={errors.cognitivo-conductual}
-                touched={touched.cognitivo-conductual}
+                error={errors.cognitivo_conductual}
+                touched={touched.cognitivo_conductual}
               />
                <SelectField
-                name="higienico-dietetico"
+                name="higienico_dietetico"
                 label="Higiénico-Dietético"
-                value={values.higienico-dietetico}
+                value={values.higienico_dietetico}
                 handleChange={handleChange}
-                error={errors.higienico-dietetico}
-                touched={touched.higienico-dietetico}
+                error={errors.higienico_dietetico}
+                touched={touched.higienico_dietetico}
               />
             </div>
             <button
