@@ -121,8 +121,6 @@ const EvalForm = () => {
 
   const handleSubmit = () => {
     setIsModalOpen(true);
-
-    // Reiniciar el formulario
      resetForm();
   };
 
