@@ -7,74 +7,68 @@ import { useState, useEffect } from "react";
 import * as tf from "@tensorflow/tfjs";
 import formSchema from "../../schemas/formSchema";
 
-// const handlePredictionResult = (result) => {
-//   if (result.length === 2) {
-//     const class1Probability = result[1] * 100; // Convertir a porcentaje
-//     const roundedClass1Probability = Math.round(class1Probability * 100) / 100;
+ const handlePredictionResult = (result) => {
+   if (result.length === 2) {
+     const class1Probability = result[1] * 100; // Convertir a porcentaje
+     const roundedClass1Probability = Math.round(class1Probability * 100) / 100;
 
-//     console.log(`Resultado de la evaluacion : ${roundedClass1Probability}%`);
+     console.log(`Resultado de la evaluacion : ${roundedClass1Probability}%`);
 
-//     return `${roundedClass1Probability}%`;
-//   }
-//   return "Predicción no válida";
-// };
+     return `${roundedClass1Probability}%`;
+   }
+   return "Predicción no válida";
+ };
 
 // Medias y desviaciones estándar extraídas de Python
-// const means = [
-//   0.61111111, 55.6666667, 0.216049383, 0.185185185, 0.0740740741, 0.037037037,
-//   0.049382716, 0.104938272, 0.12345679, 0.203703704, 0.141975309, 0.0740740741,
-//   0.290123457, 0.469135802, 0.0555555556, 125.123457, 76.7716049, 70.61728395,
-//   10.9851852, 37.16666667, 15.7132716, 852.740741, 6.66666667, 328.564815,
-//   4.67111111, 3.78919753, 33.4074074, 38.154321, 1.83641975, 4.73580247,
-//   0.617283951, 0.135802469, 0.543209877,
-// ];
+ const means = [
+   0.648936, 4.382979, 0.234043, 0.138298, 0.053191, 0.106383,
+   0.106383, 0.297872, 0.170213, 0.159574, 0.074468, 0.170213, 0.297872,
+    0.138298, 0.106383, 0.053191, 0.617021, 0.202128, 0.170213,
+ ];
 
-// const stdDevs = [
-//   0.48749802, 12.56243666, 0.41154835, 0.38844772, 0.2618914, 0.18885257,
-//   0.21666579, 0.30647387, 0.3289608, 0.40275117, 0.34902481, 0.2618914,
-//   0.45381917, 0.49904649, 0.22906142, 15.32518521, 14.43387421, 10.76524804,
-//   2.10027106, 7.35875224, 2.49282175, 122.35409833, 1.77548463, 62.78950576,
-//   1.35058789, 1.17610887, 9.72305111, 14.5502836, 0.3216002, 0.79618049,
-//   0.48604987, 0.34257869, 0.49812941,
-// ];
+ const stdDevs = [
+  0.479862, 0.843780, 0.425669, 0.347063, 0.225618, 0.309980,
+  0.309980, 0.459775, 0.377835, 0.368175, 0.263939, 0.377835, 0.459775,
+  0.347063, 0.309980, 0.225618, 0.488720, 0.403740, 0.377835
+ ];
 
 // Función para estandarizar los valores de entrada
-// const standardize = (inputData) => {
-//   return inputData.map(
-//     (value, index) => (value - means[index]) / stdDevs[index]
-//   );
-// };
+ const standardize = (inputData) => {
+   return inputData.map(
+     (value, index) => (value - means[index]) / stdDevs[index]
+   );
+ };
 
 const EvalForm = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [model, setModel] = useState(null);
-  // const [prediction, setPrediction] = useState(null);
+   const [model, setModel] = useState(null);
+   const [prediction, setPrediction] = useState(null);
 
-  // const predict = async (inputData) => {
-  //   if (model) {
-  //     const inputTensor = tf.tensor2d([inputData]);
-  //     const prediction = model.predict(inputTensor);
-  //     return prediction.dataSync();
-  //   }
-  //   return null;
-  // };
+   const predict = async (inputData) => {
+     if (model) {
+       const inputTensor = tf.tensor2d([inputData]);
+       const prediction = model.predict(inputTensor);
+       return prediction.dataSync();
+     }
+     return null;
+   };
 
-  // const predictSubmit = async (event) => {
-  //   event.preventDefault();
-  //   const result = await predict(inputData);
-  //   setPrediction(result[0]);
-  // };
+   const predictSubmit = async (event) => {
+     event.preventDefault();
+     const result = await predict(inputData);
+     setPrediction(result[0]);
+ };
 
-  // useEffect(() => {
-  //   const loadModel = async () => {
-  //     const loadedModel = await tf.loadLayersModel("model/model.json");
-  //     setModel(loadedModel);
-  //     loadedModel.summary();
-  //     console.log("modelo cargado");
-  //   };
+   useEffect(() => {
+     const loadModel = async () => {
+      const loadedModel = await tf.loadLayersModel("model/model.json");
+       setModel(loadedModel);
+       loadedModel.summary();
+       console.log("modelo cargado");
+     };
 
-  //   loadModel();
-  // }, []);
+     loadModel();
+   }, []);
 
   // const handleSubmit = async (values, { resetForm }) => {
   //   const fieldOrder = [
