@@ -1,0 +1,12 @@
+/* Ocultar los botones de incremento y decremento en la mayoría de los navegadores */
+.number-input::-webkit-inner-spin-button,
+.number-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+/* Opcional: en algunos navegadores, puedes necesitar ajustar más */
+.number-input {
+  appearance: none; /* Esto es estándar y puede ayudar a remover el estilo en algunos navegadores */
+}
