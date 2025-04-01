@@ -16,7 +16,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/login/",
+        "http://216.225.203.176/api/login/",
         { username, password },
         { withCredentials: true } // Envía las cookies
       );
