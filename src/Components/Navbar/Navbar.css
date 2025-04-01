@@ -1,0 +1,57 @@
+nav {
+  background-color: #333;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between; /* Espaciado entre los enlaces y los botones */
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+nav .nav-links {
+  position: absolute; /* Posiciona los enlaces en el centro absoluto */
+  left: 50%; /* Mueve el contenedor al centro horizontal */
+  transform: translateX(-50%); /* Ajusta para centrar completamente */
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav .nav-links li {
+  margin: 0 15px;
+}
+
+nav .nav-links li a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+nav .nav-links li a:hover {
+  color: #00bcd4;
+}
+
+nav .auth-buttons {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+nav .auth-buttons button,
+nav .auth-buttons a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  margin-left: 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+nav .auth-buttons button:hover,
+nav .auth-buttons a:hover {
+  color: #f44336;
+}
