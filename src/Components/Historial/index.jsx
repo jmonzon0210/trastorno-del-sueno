@@ -25,7 +25,7 @@ export default function Historial() {
 
   const obtenerPacientes = () => {
     setLoading(true);
-    axios.get("http://localhost:8000/api/pacientes/")
+    axios.get("http://216.225.203.176/api/pacientes/")
       .then((response) => {
         const formattedData = formatData(response.data);
         setData(formattedData);
@@ -126,12 +126,12 @@ export default function Historial() {
         console.log("Datos enviados al backend:", transformedValues); // Verificar los datos enviados
 
         // Enviar los datos al modelo de IA
-        axios.post("http://localhost:8000/api/predecir/", { variables: orderedValues }, { withCredentials: true })
+        axios.post("http://216.225.203.176/api/predecir/", { variables: orderedValues }, { withCredentials: true })
           .then((response) => {
             transformedValues.resultado = response.data.prediccion;
 
             // Actualizar el paciente en el backend
-            return axios.put(`http://localhost:8000/api/pacientes/${editingPatient.id}/`, transformedValues);
+            return axios.put(`http://216.225.203.176/api/pacientes/${editingPatient.id}/`, transformedValues);
           })
           .then(() => {
             obtenerPacientes();
@@ -147,7 +147,7 @@ export default function Historial() {
 };
 
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:8000/api/pacientes/${id}/`)
+    axios.delete(`http://216.225.203.176/api/pacientes/${id}/`)
       .then(() => {
         const updatedData = data.filter((item) => item.id !== id);
         setData(updatedData);
