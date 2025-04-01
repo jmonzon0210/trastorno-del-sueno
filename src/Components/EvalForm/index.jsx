@@ -58,7 +58,7 @@ const EvalForm = () => {
     try {
       // Enviar los datos al backend para la predicción
       const response = await axios.post(
-        "http://localhost:8000/api/predecir/",
+        "http://216.225.203.176/api/predecir/",
         { variables: orderedValues }, // Formato esperado por el backend
         { withCredentials: true }  
       );
@@ -102,7 +102,7 @@ const EvalForm = () => {
 
 
     try {
-      const response = await axios.post('http://localhost:8000/api/save_patient/', dataToSend,
+      const response = await axios.post('http://216.225.203.176/api/save_patient/', dataToSend,
     {withCredentials: true}
   );
     
