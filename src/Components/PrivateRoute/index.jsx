@@ -9,10 +9,10 @@ const PrivateRoute = ({ roles, component: Component }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/token/refresh/", { withCredentials: true })
+      .get("http://216.225.203.176/api/token/refresh/", { withCredentials: true })
       .then(() => {
         console.log("Token refrescado con éxito");
-        return axios.get("http://localhost:8000/api/user/", { withCredentials: true });
+        return axios.get("http://216.225.203.176/api/user/", { withCredentials: true });
       })
       .then((response) => {
         console.log("Datos del usuario obtenidos:", response.data);
