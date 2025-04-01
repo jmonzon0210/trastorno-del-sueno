@@ -7,7 +7,7 @@ import NotFound from "../NotFound";
 import Login from "../../Components/Login";
 import PrivateRoute from "../../Components/PrivateRoute";
 
-import Navbar from "../../Components/NavBar/index.jsx";
+import Navbar from "../../Components/Navbar";
 import StatsDashboard from "../../Components/Graficos";
 import Usuarios from "../../Components/Usuarios";
 import { AuthProvider } from "../../context";
