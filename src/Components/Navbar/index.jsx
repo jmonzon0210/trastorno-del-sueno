@@ -10,7 +10,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:8000/api/logout/", {}, { withCredentials: true });
+      await axios.post("http://216.225.203.176/api/logout/", {}, { withCredentials: true });
       setUser(null);
       navigate("/login");
     } catch (error) {
