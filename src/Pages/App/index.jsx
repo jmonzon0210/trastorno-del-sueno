@@ -6,11 +6,11 @@ import Historial from "../Historial";
 import NotFound from "../NotFound";
 import Login from "../../Components/Login";
 import PrivateRoute from "../../Components/PrivateRoute";
-import { AuthProvider } from "../../context";
+
 import Navbar from "../../Components/NavBar";
 import StatsDashboard from "../../Components/Graficos";
 import Usuarios from "../../Components/Usuarios";
-
+import { AuthProvider } from "../../context";
 
 const AppRoutes = () => {
   let routes = useRoutes([
