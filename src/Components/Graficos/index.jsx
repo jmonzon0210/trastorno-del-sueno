@@ -29,7 +29,7 @@ const StatsDashboard = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/estadisticas/", { withCredentials: true })
+      .get("http://216.225.203.176/api/estadisticas/", { withCredentials: true })
       .then((response) => {
         setStats(response.data);
         setLoading(false);
