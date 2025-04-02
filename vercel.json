@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "http://216.225.203.176/api/user/$1" },
+    { "source": "/api/user/(.*)", "destination": "http://216.225.203.176/api/user/$1" },
     { "source": "/(.*)", "destination": "/" }
   ]
 }
