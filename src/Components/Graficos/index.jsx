@@ -29,7 +29,7 @@ const StatsDashboard = () => {
 
   useEffect(() => {
     axios
-      .get("https://sleepdisorder-detector.duckdns.org/api/api//estadisticas/", { withCredentials: true })
+      .get("https://sleepdisorder-detector.duckdns.org/api/estadisticas/", { withCredentials: true })
       .then((response) => {
         setStats(response.data);
         setLoading(false);
