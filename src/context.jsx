@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     axios
-      .get("https://sleepdisorder-detector.duckdns.org/api/api/user/", { withCredentials: true })
+      .get("https://sleepdisorder-detector.duckdns.org/api/user/", { withCredentials: true })
       .then((response) => {
         setUser({ ...response.data, isAuthenticated: true });
       })
