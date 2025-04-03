@@ -16,7 +16,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://sleepdisorder-detector.duckdns.org/api/login/",
+        "https://sleepdisorder-detector.duckdns.org/api/api/login/",
         { username, password },
         { withCredentials: true } // Envía las cookies
       );
