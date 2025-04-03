@@ -10,7 +10,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("https://sleepdisorder-detector.duckdns.org/api/api/logout/", {}, { withCredentials: true });
+      await axios.post("https://sleepdisorder-detector.duckdns.org/api/logout/", {}, { withCredentials: true });
       setUser(null);
       navigate("/login");
     } catch (error) {
