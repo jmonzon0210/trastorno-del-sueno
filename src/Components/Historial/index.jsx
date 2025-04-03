@@ -25,7 +25,7 @@ export default function Historial() {
 
   const obtenerPacientes = () => {
     setLoading(true);
-    axios.get("https://sleepdisorder-detector.duckdns.org/api/api/pacientes/")
+    axios.get("https://sleepdisorder-detector.duckdns.org/api/pacientes/")
       .then((response) => {
         const formattedData = formatData(response.data);
         setData(formattedData);
@@ -126,12 +126,12 @@ export default function Historial() {
         console.log("Datos enviados al backend:", transformedValues); // Verificar los datos enviados
 
         // Enviar los datos al modelo de IA
-        axios.post("https://sleepdisorder-detector.duckdns.org/api/api/predecir/", { variables: orderedValues }, { withCredentials: true })
+        axios.post("https://sleepdisorder-detector.duckdns.org/api/predecir/", { variables: orderedValues }, { withCredentials: true })
           .then((response) => {
             transformedValues.resultado = response.data.prediccion;
 
             // Actualizar el paciente en el backend
-            return axios.put(`https://sleepdisorder-detector.duckdns.org/api/api/pacientes/${editingPatient.id}/`, transformedValues);
+            return axios.put(`https://sleepdisorder-detector.duckdns.org/api/pacientes/${editingPatient.id}/`, transformedValues);
           })
           .then(() => {
             obtenerPacientes();
@@ -147,7 +147,7 @@ export default function Historial() {
 };
 
   const handleDelete = (id) => {
-    axios.delete(`https://sleepdisorder-detector.duckdns.org/api/api/pacientes/${id}/`)
+    axios.delete(`https://sleepdisorder-detector.duckdns.org/api/pacientes/${id}/`)
       .then(() => {
         const updatedData = data.filter((item) => item.id !== id);
         setData(updatedData);
