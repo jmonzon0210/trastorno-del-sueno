@@ -39,6 +39,10 @@ nav .auth-buttons {
   align-items: center;
 }
 
+nav .user-greeting {
+  margin-right: auto; /* Empuja el saludo a la izquierda */
+}
+
 nav .auth-buttons button,
 nav .auth-buttons a {
   text-decoration: none;
