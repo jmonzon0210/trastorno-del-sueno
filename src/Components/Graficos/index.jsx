@@ -13,16 +13,7 @@ import {
   Legend,
 } from "chart.js";
 
-// Registrar elementos necesarios de Chart.js
-ChartJS.register(
-  ArcElement,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const StatsDashboard = () => {
   const [stats, setStats] = useState({});
@@ -41,7 +32,6 @@ const StatsDashboard = () => {
       });
   }, []);
 
-  // 🟡 Preparar datos para el gráfico de pastel (resultado)
   const pieData = {
     labels: ["Positivo", "Negativo"],
     datasets: [
@@ -55,10 +45,8 @@ const StatsDashboard = () => {
     ],
   };
 
-  // 🔵 Preparar datos para el gráfico de barras (factores)
   const factores = { ...stats };
-  delete factores.resultado;  // Excluir la columna resultado del gráfico de barras
-
+  delete factores.resultado;
   const labels = Object.keys(factores);
   const siData = labels.map((col) => factores[col]?.si || 0);
   const noData = labels.map((col) => factores[col]?.no || 0);
@@ -85,14 +73,10 @@ const StatsDashboard = () => {
 
   const barOptions = {
     responsive: true,
+    maintainAspectRatio: false, // Permite que el gráfico se ajuste al contenedor
     plugins: {
-      legend: {
-        position: "top",
-      },
-      title: {
-        display: true,
-        text: "Distribución de Factores",
-      },
+      legend: { position: "top" },
+      title: { display: true, text: "Distribución de Factores" },
     },
     scales: {
       x: {
@@ -101,34 +85,24 @@ const StatsDashboard = () => {
           minRotation: 45,
         },
       },
-      y: {
-        beginAtZero: true,
-      },
+      y: { beginAtZero: true },
     },
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="stats-dashboard">
       {loading ? (
-        <div style={{ 
-          display: "flex", 
-          justifyContent: "center", 
-          alignItems: "center", 
-          minHeight: "400px" 
-        }}>
+        <div className="loading-container">
           <Loading />
         </div>
       ) : (
-        <div style={{ display: "flex", justifyContent: "space-between", gap: "20px" }}>
-          {/* Gráfico de pastel a la izquierda */}
-          <div style={{ width: "30%", maxWidth: "400px" }}>
-            <h3 style={{ textAlign: "center" }}>Resultados</h3>
+        <div className="charts-container">
+          <div className="pie-chart">
+            <h3>Resultados</h3>
             <Pie data={pieData} />
           </div>
-
-          {/* Gráfico de barras a la derecha */}
-          <div style={{ flex: 1 }}>
-            <h3 style={{ textAlign: "center" }}>Factores de Pacientes</h3>
+          <div className="bar-chart">
+            <h3>Factores de Pacientes</h3>
             <Bar data={barData} options={barOptions} />
           </div>
         </div>
@@ -137,4 +111,4 @@ const StatsDashboard = () => {
   );
 };
 
-export default StatsDashboard
+export default StatsDashboard;
