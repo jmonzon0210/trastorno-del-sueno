@@ -58,7 +58,7 @@ const EvalForm = () => {
     try {
       // Enviar los datos al backend para la predicción
       const response = await axios.post(
-        "https://sleepdisorder-detector.duckdns.org/api//predecir/",
+        "https://sleepdisorder-detector.duckdns.org/api/predecir/",
         { variables: orderedValues }, // Formato esperado por el backend
         { withCredentials: true }  
       );
@@ -102,7 +102,7 @@ const EvalForm = () => {
 
 
     try {
-      const response = await axios.post('https://sleepdisorder-detector.duckdns.org/api//save_patient/', dataToSend,
+      const response = await axios.post('https://sleepdisorder-detector.duckdns.org/api/save_patient/', dataToSend,
     {withCredentials: true}
   );
     
