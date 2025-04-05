@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Loading from "./../Loading"
+import Loading from "./../Loading";
 import { Pie, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -41,15 +41,13 @@ const StatsDashboard = () => {
       });
   }, []);
 
-  if (loading) return <Loading />;
-
   // 🟡 Preparar datos para el gráfico de pastel (resultado)
   const pieData = {
     labels: ["Positivo", "Negativo"],
     datasets: [
       {
         label: "Resultados",
-        data: [stats.resultado.si, stats.resultado.no],
+        data: [stats.resultado?.si || 0, stats.resultado?.no || 0],
         backgroundColor: ["rgb(255, 0, 0)", "rgba(21, 255, 0, 0.54)"],
         borderColor: ["rgb(128, 4, 4)", "rgb(2, 75, 5)"],
         borderWidth: 1,
@@ -62,8 +60,8 @@ const StatsDashboard = () => {
   delete factores.resultado;  // Excluir la columna resultado del gráfico de barras
 
   const labels = Object.keys(factores);
-  const siData = labels.map((col) => factores[col].si);
-  const noData = labels.map((col) => factores[col].no);
+  const siData = labels.map((col) => factores[col]?.si || 0);
+  const noData = labels.map((col) => factores[col]?.no || 0);
 
   const barData = {
     labels,
@@ -110,20 +108,33 @@ const StatsDashboard = () => {
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", padding: "20px", gap: "20px" }}>
-      {/* Gráfico de pastel a la izquierda */}
-      <div style={{ width: "30%", maxWidth: "400px" }}>
-        <h3 style={{ textAlign: "center" }}>Resultados</h3>
-        <Pie data={pieData} />
-      </div>
+    <div style={{ padding: "20px" }}>
+      {loading ? (
+        <div style={{ 
+          display: "flex", 
+          justifyContent: "center", 
+          alignItems: "center", 
+          minHeight: "400px" 
+        }}>
+          <Loading />
+        </div>
+      ) : (
+        <div style={{ display: "flex", justifyContent: "space-between", gap: "20px" }}>
+          {/* Gráfico de pastel a la izquierda */}
+          <div style={{ width: "30%", maxWidth: "400px" }}>
+            <h3 style={{ textAlign: "center" }}>Resultados</h3>
+            <Pie data={pieData} />
+          </div>
 
-      {/* Gráfico de barras a la derecha */}
-      <div style={{ flex: 1 }}>
-        <h3 style={{ textAlign: "center" }}>Factores de Pacientes</h3>
-        <Bar data={barData} options={barOptions} />
-      </div>
+          {/* Gráfico de barras a la derecha */}
+          <div style={{ flex: 1 }}>
+            <h3 style={{ textAlign: "center" }}>Factores de Pacientes</h3>
+            <Bar data={barData} options={barOptions} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default StatsDashboard;
+export default StatsDashboard
