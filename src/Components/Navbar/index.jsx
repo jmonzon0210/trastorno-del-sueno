@@ -53,7 +53,7 @@ const Navbar = () => {
         )}
         {user && (
           <>
-            <span>Hola, {user.username}</span>
+            {user && <span className="user-greeting">Hola, {user.username}</span>}
             <button onClick={handleLogout}>Cerrar sesión</button>
           </>
         )}
