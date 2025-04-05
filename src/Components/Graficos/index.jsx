@@ -70,26 +70,47 @@ const StatsDashboard = () => {
 
   // Datos para el gráfico de barras
   const factores = { ...stats };
-  delete factores.resultado; // Excluir resultado del gráfico de barras
-  const labels = Object.keys(factores).map((key) => labelMap[key] || key); // Usar nombre completo o clave si no está en el mapeo
+  delete factores.resultado;
+  const labels = Object.keys(factores).map((key) => labelMap[key] || key);
   const siData = labels.map((label, index) => factores[Object.keys(factores)[index]]?.si || 0);
   const noData = labels.map((label, index) => factores[Object.keys(factores)[index]]?.no || 0);
+
+  // Índice de "Sexo (Masculino/Femenino)"
+  const sexoIndex = labels.indexOf("Sexo (Masculino/Femenino)");
 
   const barData = {
     labels,
     datasets: [
       {
-        label: "Sí", // Para "sexo" significa Masculino
-        data: siData,
+        label: "Sí",
+        data: siData.map((value, index) => (index === sexoIndex ? 0 : value)), // Ocultar "Sí" para sexo
         backgroundColor: "rgb(255, 4, 4)",
         borderColor: "rgb(116, 3, 3)",
         borderWidth: 1,
       },
       {
-        label: "No", // Para "sexo" significa Femenino
-        data: noData,
+        label: "No",
+        data: noData.map((value, index) => (index === sexoIndex ? 0 : value)), // Ocultar "No" para sexo
         backgroundColor: "rgba(65, 255, 7, 0.6)",
         borderColor: "rgb(0, 102, 26)",
+        borderWidth: 1,
+      },
+      {
+        label: "Masculino",
+        data: labels.map((label, index) =>
+          index === sexoIndex ? stats.sexo?.masculino || 0 : 0
+        ),
+        backgroundColor: "rgba(173, 216, 230, 0.6)", // Azul claro
+        borderColor: "rgba(173, 216, 230, 1)",
+        borderWidth: 1,
+      },
+      {
+        label: "Femenino",
+        data: labels.map((label, index) =>
+          index === sexoIndex ? stats.sexo?.femenino || 0 : 0
+        ),
+        backgroundColor: "rgba(255, 182, 193, 0.6)", // Rosa claro
+        borderColor: "rgba(255, 182, 193, 1)",
         borderWidth: 1,
       },
     ],
@@ -104,13 +125,7 @@ const StatsDashboard = () => {
       tooltip: {
         callbacks: {
           label: function (context) {
-            const label = context.dataset.label;
-            const value = context.raw;
-            const factor = context.chart.data.labels[context.dataIndex];
-            if (factor === "Sexo (Masculino/Femenino)") {
-              return `${label === "Sí" ? "Masculino" : "Femenino"}: ${value}`;
-            }
-            return `${label}: ${value}`;
+            return `${context.dataset.label}: ${context.raw}`;
           },
         },
       },
@@ -122,12 +137,18 @@ const StatsDashboard = () => {
           minRotation: 45,
           autoSkip: true,
           maxTicksLimit: 10,
-          font: {
-            size: 12, // Ajustar tamaño de fuente para nombres largos
-          },
+          font: { size: 12 },
         },
       },
-      y: { beginAtZero: true, suggestedMax: Math.max(...siData, ...noData) * 1.2 },
+      y: {
+        beginAtZero: true,
+        suggestedMax: Math.max(
+          ...siData,
+          ...noData,
+          stats.sexo?.masculino || 0,
+          stats.sexo?.femenino || 0
+        ) * 1.2,
+      },
     },
   };
 
