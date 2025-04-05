@@ -82,6 +82,7 @@ const StatsDashboard = () => {
         backgroundColor: "rgb(255, 4, 4)",
         borderColor: "rgb(116, 3, 3)",
         borderWidth: 1,
+        barThickness: 40,
       },
       {
         label: "No",
@@ -89,6 +90,7 @@ const StatsDashboard = () => {
         backgroundColor: "rgba(65, 255, 7, 0.6)",
         borderColor: "rgb(0, 102, 26)",
         borderWidth: 1,
+        barThickness: 40,
       },
       {
         label: "Masculino",
@@ -98,6 +100,7 @@ const StatsDashboard = () => {
         backgroundColor: "rgba(173, 216, 230, 0.6)", // Azul claro
         borderColor: "rgba(173, 216, 230, 1)",
         borderWidth: 1,
+        barThickness: 40,
       },
       {
         label: "Femenino",
@@ -107,6 +110,7 @@ const StatsDashboard = () => {
         backgroundColor: "rgba(255, 182, 193, 0.6)", // Rosa claro
         borderColor: "rgba(255, 182, 193, 1)",
         borderWidth: 1,
+        barThickness: 40,
       },
     ],
   };
@@ -130,8 +134,6 @@ const StatsDashboard = () => {
         ticks: {
           maxRotation: 90,
           minRotation: 45,
-          autoSkip: true,
-          maxTicksLimit: 10,
           font: { size: 12 },
         },
       },
