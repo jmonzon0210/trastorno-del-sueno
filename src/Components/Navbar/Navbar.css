@@ -1,61 +1,52 @@
+/* Navbar.css */
 nav {
-  background-color: #333;
-  padding: 10px 20px;
   display: flex;
-  justify-content: space-between; /* Espaciado entre los enlaces y los botones */
+  justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  padding: 10px 20px;
+  background-color: #f8f9fa;
 }
 
-nav .nav-links {
-  position: absolute; /* Posiciona los enlaces en el centro absoluto */
-  left: 50%; /* Mueve el contenedor al centro horizontal */
-  transform: translateX(-50%); /* Ajusta para centrar completamente */
-  display: flex;
-  justify-content: center;
+.nav-links {
   list-style: none;
+  display: flex;
+  gap: 20px;
   margin: 0;
   padding: 0;
 }
 
-nav .nav-links li {
-  margin: 0 15px;
-}
-
-nav .nav-links li a {
+.nav-links li a {
   text-decoration: none;
-  color: white;
-  font-weight: bold;
-  transition: color 0.3s ease;
+  color: #333;
 }
 
-nav .nav-links li a:hover {
-  color: #00bcd4;
-}
-
-nav .auth-buttons {
-  margin-left: auto;
+.auth-section {
   display: flex;
   align-items: center;
+  gap: 20px; /* Espacio entre el saludo y los botones */
 }
 
-nav .user-greeting {
+.user-greeting {
   margin-right: auto; /* Empuja el saludo a la izquierda */
 }
 
-nav .auth-buttons button,
-nav .auth-buttons a {
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.auth-buttons a,
+.auth-buttons button {
+  padding: 5px 10px;
   text-decoration: none;
-  color: white;
-  font-weight: bold;
-  margin-left: 15px;
+  color: #333;
   background: none;
   border: none;
   cursor: pointer;
-  transition: color 0.3s ease;
 }
 
-nav .auth-buttons button:hover,
-nav .auth-buttons a:hover {
-  color: #f44336;
+.auth-buttons button {
+  background-color: #dc3545;
+  color: white;
+  border-radius: 4px;
 }
