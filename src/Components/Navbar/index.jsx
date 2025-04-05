@@ -1,25 +1,30 @@
+// Navbar.jsx
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context";
-import axios from "axios";
 import "./Navbar.css";
 
 const Navbar = () => {
-  const { user, setUser, loading } = useAuth();
+  const { user, logout, loading } = useAuth(); // Usamos logout del contexto
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      await axios.post("https://sleepdisorder-detector.duckdns.org/api/logout/", {}, { withCredentials: true });
-      setUser(null);
-      navigate("/login");
+      await logout(); // Llama a la función logout del contexto
+      navigate("/login"); // Redirige al login
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
   };
 
   if (loading) {
-    return <nav><ul><li>Cargando...</li></ul></nav>;
+    return (
+      <nav>
+        <ul>
+          <li>Cargando...</li>
+        </ul>
+      </nav>
+    );
   }
 
   return (
@@ -41,15 +46,16 @@ const Navbar = () => {
         <li><Link to="/">Acerca de...</Link></li>
       </ul>
 
-
       {/* Botones de autenticación alineados a la derecha */}
       <div className="auth-buttons">
         {!user && (
           <Link to="/login">Iniciar Sesión</Link>
         )}
-        
         {user && (
-          <button onClick={handleLogout}>Cerrar sesión</button>
+          <>
+            <span>Hola, {user.username}</span>
+            <button onClick={handleLogout}>Cerrar sesión</button>
+          </>
         )}
       </div>
     </nav>
