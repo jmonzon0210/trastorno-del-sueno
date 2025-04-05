@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Loading from "./../Loading"
 import { Pie, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -40,7 +41,7 @@ const StatsDashboard = () => {
       });
   }, []);
 
-  if (loading) return <p>Cargando...</p>;
+  if (loading) return <Loading />;
 
   // 🟡 Preparar datos para el gráfico de pastel (resultado)
   const pieData = {
