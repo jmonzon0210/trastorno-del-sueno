@@ -5,12 +5,12 @@ import { useAuth } from "../../context";
 import "./Navbar.css";
 
 const Navbar = () => {
-  const { user, logout, loading } = useAuth(); // Usamos logout del contexto
+  const { user, logout, loading } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      await logout(); // Usa la función del contexto
+      await logout();
       navigate("/login");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
@@ -46,17 +46,13 @@ const Navbar = () => {
         <li><Link to="/">Acerca de...</Link></li>
       </ul>
 
-      {/* Botones de autenticación alineados a la derecha */}
-      <div className="auth-buttons">
-        {!user && (
-          <Link to="/login">Iniciar Sesión</Link>
-        )}
-        {user && (
-          <>
-            {user && <span className="user-greeting">Hola, {user.username}</span>}
-            <button onClick={handleLogout}>Cerrar sesión</button>
-          </>
-        )}
+      {/* Sección de autenticación */}
+      <div className="auth-section">
+        {user && <span className="user-greeting">Hola, {user.username}</span>}
+        <div className="auth-buttons">
+          {!user && <Link to="/login">Iniciar Sesión</Link>}
+          {user && <button onClick={handleLogout}>Cerrar sesión</button>}
+        </div>
       </div>
     </nav>
   );
