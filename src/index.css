@@ -16,23 +16,26 @@
   display: flex;
   gap: 2rem;
   flex-wrap: wrap;
+  justify-content: space-between; /* Mejor uso del espacio horizontal */
+  width: 100%;
 }
 
 .pie-chart {
   flex: 1;
   min-width: 300px;
-  max-width: 400px;
+  max-width: 400px; /* Limita el tamaño del gráfico de pastel */
 }
 
 .bar-chart {
-  flex: 2;
+  flex: 3; /* Da más espacio al gráfico de barras */
   min-width: 300px;
+  width: 100%; /* Asegura que use todo el ancho disponible */
 }
 
 .bar-chart-wrapper {
-  height: 400px; /* Altura fija para el gráfico */
+  height: 500px; /* Aumenta la altura del gráfico de barras */
   width: 100%;
-  position: relative; /* Necesario para que el gráfico se ajuste */
+  position: relative;
 }
 
 .pie-chart h3,
@@ -56,7 +59,7 @@
   }
 
   .bar-chart-wrapper {
-    height: 300px; /* Reduce la altura en pantallas más pequeñas */
+    height: 400px; /* Altura ajustada para tabletas */
   }
 }
 
@@ -71,6 +74,6 @@
   }
 
   .bar-chart-wrapper {
-    height: 250px; /* Aún más pequeño para móviles */
+    height: 350px; /* Altura ajustada para móviles */
   }
 }
