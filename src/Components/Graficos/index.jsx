@@ -73,7 +73,7 @@ const StatsDashboard = () => {
 
   const barOptions = {
     responsive: true,
-    maintainAspectRatio: false, // Permite que el gráfico se ajuste al contenedor
+    maintainAspectRatio: false, // Permitimos ajustar la altura al contenedor
     plugins: {
       legend: { position: "top" },
       title: { display: true, text: "Distribución de Factores" },
@@ -83,9 +83,14 @@ const StatsDashboard = () => {
         ticks: {
           maxRotation: 90,
           minRotation: 45,
+          autoSkip: true, // Omite etiquetas si hay demasiadas
+          maxTicksLimit: 10, // Limita el número de etiquetas visibles
         },
       },
-      y: { beginAtZero: true },
+      y: { 
+        beginAtZero: true,
+        suggestedMax: Math.max(...siData, ...noData) * 1.2, // Limita el eje Y dinámicamente
+      },
     },
   };
 
@@ -103,7 +108,9 @@ const StatsDashboard = () => {
           </div>
           <div className="bar-chart">
             <h3>Factores de Pacientes</h3>
-            <Bar data={barData} options={barOptions} />
+            <div className="bar-chart-wrapper">
+              <Bar data={barData} options={barOptions} />
+            </div>
           </div>
         </div>
       )}
