@@ -10,8 +10,8 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await logout(); // Llama a la función logout del contexto
-      navigate("/login"); // Redirige al login
+      await logout(); // Usa la función del contexto
+      navigate("/login");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
