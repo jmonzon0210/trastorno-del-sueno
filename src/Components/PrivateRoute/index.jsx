@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../context";
+import Loading from "./../Loading";
 
 const PrivateRoute = ({ roles, component: Component }) => {
   const { user, setUser } = useAuth();
@@ -29,7 +30,18 @@ const PrivateRoute = ({ roles, component: Component }) => {
       .finally(() => setLoading(false));
   }, [setUser]);
 
-  if (loading) return <div>Cargando...</div>;
+  if (loading) {
+    return (
+      <div style={{ 
+        display: "flex", 
+        justifyContent: "center", 
+        alignItems: "center", 
+        minHeight: "100vh" 
+      }}>
+        <Loading />
+      </div>
+    );
+  }
 
   if (!user || !user.isAuthenticated) {
     return <Navigate to="/login" replace />;
@@ -37,7 +49,7 @@ const PrivateRoute = ({ roles, component: Component }) => {
 
   if (roles && !roles.includes(user.role)) {
     return <Navigate to="/" replace />;
-  };
+  }
 
   console.log("Renderizando componente en PrivateRoute");
 
