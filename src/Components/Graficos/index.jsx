@@ -32,6 +32,29 @@ const StatsDashboard = () => {
       });
   }, []);
 
+  // Mapeo de nombres completos
+  const labelMap = {
+    ant_patologicos_fam: "Antecedentes Patológicos Familiares",
+    ant_pre_peri_postnatales_positivos: "Antecedentes Pre/Peri/Postnatales Positivos",
+    alteraciones_anatomicas: "Alteraciones Anatómicas",
+    consumo_medicamentos: "Consumo de Medicamentos",
+    consumo_toxicos: "Consumo de Tóxicos",
+    exp_medios_pantallas: "Exposición a Medios y Pantallas",
+    trastorno_neurodesarrollo: "Trastorno del Neurodesarrollo",
+    obesidad: "Obesidad",
+    hipertension_arterial: "Hipertensión Arterial",
+    trastornos_aprendizaje: "Trastornos de Aprendizaje",
+    trastornos_comportamiento: "Trastornos de Comportamiento",
+    cefalea: "Cefalea",
+    res_insulina: "Resistencia a la Insulina",
+    depresion: "Depresión",
+    higienico_dietetico: "Higiene Dietética",
+    cognitivo_conductual: "Cognitivo Conductual",
+    medicamentoso: "Medicamentoso",
+    sexo: "Sexo (Masculino/Femenino)",
+  };
+
+  // Datos para el gráfico de pastel (sin cambios)
   const pieData = {
     labels: ["Positivo", "Negativo"],
     datasets: [
@@ -45,24 +68,25 @@ const StatsDashboard = () => {
     ],
   };
 
+  // Datos para el gráfico de barras
   const factores = { ...stats };
-  delete factores.resultado;
-  const labels = Object.keys(factores);
-  const siData = labels.map((col) => factores[col]?.si || 0);
-  const noData = labels.map((col) => factores[col]?.no || 0);
+  delete factores.resultado; // Excluir resultado del gráfico de barras
+  const labels = Object.keys(factores).map((key) => labelMap[key] || key); // Usar nombre completo o clave si no está en el mapeo
+  const siData = labels.map((label, index) => factores[Object.keys(factores)[index]]?.si || 0);
+  const noData = labels.map((label, index) => factores[Object.keys(factores)[index]]?.no || 0);
 
   const barData = {
     labels,
     datasets: [
       {
-        label: "Sí",
+        label: "Sí", // Para "sexo" significa Masculino
         data: siData,
         backgroundColor: "rgb(255, 4, 4)",
         borderColor: "rgb(116, 3, 3)",
         borderWidth: 1,
       },
       {
-        label: "No",
+        label: "No", // Para "sexo" significa Femenino
         data: noData,
         backgroundColor: "rgba(65, 255, 7, 0.6)",
         borderColor: "rgb(0, 102, 26)",
@@ -73,22 +97,37 @@ const StatsDashboard = () => {
 
   const barOptions = {
     responsive: true,
-    maintainAspectRatio: false, // Permitimos ajustar la altura al contenedor
+    maintainAspectRatio: false,
     plugins: {
       legend: { position: "top" },
       title: { display: true, text: "Distribución de Factores" },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            const label = context.dataset.label;
+            const value = context.raw;
+            const factor = context.chart.data.labels[context.dataIndex];
+            if (factor === "Sexo (Masculino/Femenino)") {
+              return `${label === "Sí" ? "Masculino" : "Femenino"}: ${value}`;
+            }
+            return `${label}: ${value}`;
+          },
+        },
+      },
     },
     scales: {
       x: {
         ticks: {
           maxRotation: 90,
           minRotation: 45,
+          autoSkip: true,
+          maxTicksLimit: 10,
+          font: {
+            size: 12, // Ajustar tamaño de fuente para nombres largos
+          },
         },
       },
-      y: { 
-        beginAtZero: true,
-        suggestedMax: Math.max(...siData, ...noData) * 1.2, // Limita el eje Y dinámicamente
-      },
+      y: { beginAtZero: true, suggestedMax: Math.max(...siData, ...noData) * 1.2 },
     },
   };
 
