@@ -82,7 +82,8 @@ const StatsDashboard = () => {
         backgroundColor: "rgb(255, 4, 4)",
         borderColor: "rgb(116, 3, 3)",
         borderWidth: 1,
-        barThickness: 20,
+        categoryPercentage: 0.9, // 90% del espacio de la categoría
+  barPercentage: 0.8,
       },
       {
         label: "No",
@@ -90,7 +91,8 @@ const StatsDashboard = () => {
         backgroundColor: "rgba(65, 255, 7, 0.6)",
         borderColor: "rgb(0, 102, 26)",
         borderWidth: 1,
-        barThickness: 20,
+       categoryPercentage: 0.9, // 90% del espacio de la categoría
+  barPercentage: 0.8,
       },
       {
         label: "Masculino",
@@ -101,7 +103,7 @@ const StatsDashboard = () => {
         borderColor: "rgba(173, 216, 230, 1)",
         borderWidth: 1,
        categoryPercentage: 0.9, // 90% del espacio de la categoría
-  barPercentage: 0.8,
+        barPercentage: 0.8,
       },
       {
         label: "Femenino",
