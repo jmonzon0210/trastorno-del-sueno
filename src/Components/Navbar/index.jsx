@@ -1,4 +1,3 @@
-// Navbar.jsx
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context";
@@ -28,7 +27,12 @@ const Navbar = () => {
   }
 
   return (
-    <nav>
+    <nav className="navbar">
+      {/* Saludo a la izquierda */}
+      <div className="navbar-left">
+        {user && <span className="user-greeting">Hola, {user.username}</span>}
+      </div>
+
       {/* Enlaces centrados */}
       <ul className="nav-links">
         {user && user.role === "Especialista" && (
@@ -46,13 +50,10 @@ const Navbar = () => {
         <li><Link to="/">Acerca de...</Link></li>
       </ul>
 
-      {/* Sección de autenticación */}
-      <div className="auth-section">
-        {user && <span className="user-greeting">Hola, {user.username}</span>}
-        <div className="auth-buttons">
-          {!user && <Link to="/login">Iniciar Sesión</Link>}
-          {user && <button onClick={handleLogout}>Cerrar sesión</button>}
-        </div>
+      {/* Botones de autenticación a la derecha */}
+      <div className="navbar-right">
+        {!user && <Link to="/login">Iniciar Sesión</Link>}
+        {user && <button onClick={handleLogout}>Cerrar sesión</button>}
       </div>
     </nav>
   );
