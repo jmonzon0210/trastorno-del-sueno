@@ -32,7 +32,6 @@ const StatsDashboard = () => {
       });
   }, []);
 
-  // Mapeo de nombres completos
   const labelMap = {
     ant_patologicos_fam: "Antecedentes Patológicos Familiares",
     ant_pre_peri_postnatales_positivos: "Antecedentes Pre/Peri/Postnatales Positivos",
@@ -54,7 +53,6 @@ const StatsDashboard = () => {
     sexo: "Sexo (Masculino/Femenino)",
   };
 
-  // Datos para el gráfico de pastel (sin cambios)
   const pieData = {
     labels: ["Positivo", "Negativo"],
     datasets: [
@@ -68,14 +66,11 @@ const StatsDashboard = () => {
     ],
   };
 
-  // Datos para el gráfico de barras
   const factores = { ...stats };
   delete factores.resultado;
   const labels = Object.keys(factores).map((key) => labelMap[key] || key);
   const siData = labels.map((label, index) => factores[Object.keys(factores)[index]]?.si || 0);
   const noData = labels.map((label, index) => factores[Object.keys(factores)[index]]?.no || 0);
-
-  // Índice de "Sexo (Masculino/Femenino)"
   const sexoIndex = labels.indexOf("Sexo (Masculino/Femenino)");
 
   const barData = {
@@ -83,14 +78,14 @@ const StatsDashboard = () => {
     datasets: [
       {
         label: "Sí",
-        data: siData.map((value, index) => (index === sexoIndex ? 0 : value)), // Ocultar "Sí" para sexo
+        data: siData.map((value, index) => (index === sexoIndex ? 0 : value)),
         backgroundColor: "rgb(255, 4, 4)",
         borderColor: "rgb(116, 3, 3)",
         borderWidth: 1,
       },
       {
         label: "No",
-        data: noData.map((value, index) => (index === sexoIndex ? 0 : value)), // Ocultar "No" para sexo
+        data: noData.map((value, index) => (index === sexoIndex ? 0 : value)),
         backgroundColor: "rgba(65, 255, 7, 0.6)",
         borderColor: "rgb(0, 102, 26)",
         borderWidth: 1,
@@ -135,6 +130,8 @@ const StatsDashboard = () => {
         ticks: {
           maxRotation: 90,
           minRotation: 45,
+          autoSkip: true,
+          maxTicksLimit: 10,
           font: { size: 12 },
         },
       },
