@@ -1,55 +1,100 @@
 /* Navbar.css */
 .navbar {
   display: flex;
-  justify-content: space-between; /* Distribuye los elementos: izquierda, centro, derecha */
+  justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: 1rem 2rem; /* Usamos rem en lugar de px para escalar con el tamaño de fuente */
   background-color: #f8f9fa;
+  flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
 }
 
 .navbar-left {
-  flex: 0 0 auto; /* No se estira, ocupa solo el espacio necesario */
+  flex: 0 0 auto;
 }
 
 .user-greeting {
   color: #333;
   font-weight: 500;
+  font-size: 1rem; /* Escalable con el tamaño base de fuente */
 }
 
 .nav-links {
-  flex: 1; /* Ocupa el espacio central disponible */
+  flex: 1;
   list-style: none;
   display: flex;
-  justify-content: center; /* Centra los enlaces horizontalmente */
-  gap: 20px;
-  margin: 0 20px; /* Espacio a los lados para no pegarse a los extremos */
+  justify-content: center;
+  gap: 1.5rem; /* Espacio relativo */
+  margin: 0 1rem;
   padding: 0;
 }
 
 .nav-links li a {
   text-decoration: none;
   color: #333;
+  font-size: 1rem;
 }
 
 .navbar-right {
-  flex: 0 0 auto; /* No se estira, ocupa solo el espacio necesario */
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.5rem;
 }
 
 .navbar-right a,
 .navbar-right button {
-  padding: 5px 10px;
+  padding: 0.5rem 1rem;
   text-decoration: none;
   color: #333;
   background: none;
   border: none;
   cursor: pointer;
+  font-size: 1rem;
 }
 
 .navbar-right button {
   background-color: #dc3545;
   color: white;
   border-radius: 4px;
+}
+
+/* Media Queries para pantallas más pequeñas */
+@media (max-width: 768px) { /* Tablets y móviles */
+  .navbar {
+    flex-direction: column; /* Apila los elementos verticalmente */
+    padding: 1rem;
+  }
+
+  .nav-links {
+    flex-direction: column; /* Apila los enlaces */
+    align-items: center;
+    width: 100%; /* Ocupa todo el ancho */
+    margin: 1rem 0;
+  }
+
+  .nav-links li {
+    width: 100%;
+    text-align: center;
+  }
+
+  .navbar-right {
+    width: 100%;
+    justify-content: center; /* Centra el botón o enlace */
+  }
+}
+
+@media (max-width: 480px) { /* Móviles pequeños */
+  .user-greeting {
+    font-size: 0.9rem;
+  }
+
+  .nav-links li a {
+    font-size: 0.9rem;
+  }
+
+  .navbar-right a,
+  .navbar-right button {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
 }
