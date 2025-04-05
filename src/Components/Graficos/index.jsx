@@ -83,8 +83,6 @@ const StatsDashboard = () => {
         ticks: {
           maxRotation: 90,
           minRotation: 45,
-          autoSkip: true, // Omite etiquetas si hay demasiadas
-          maxTicksLimit: 10, // Limita el número de etiquetas visibles
         },
       },
       y: { 
