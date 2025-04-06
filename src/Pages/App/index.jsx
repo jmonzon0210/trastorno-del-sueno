@@ -46,6 +46,7 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Navbar />
+        <Analytics />
         <AppRoutes />
       </BrowserRouter>
     </AuthProvider>
