@@ -6,7 +6,7 @@ import Historial from "../Historial";
 import NotFound from "../NotFound";
 import Login from "../../Components/Login";
 import PrivateRoute from "../../Components/PrivateRoute";
-
+import { Analytics } from "@vercel/analytics/react"
 import Navbar from "../../Components/Navbar";
 import StatsDashboard from "../../Components/Graficos";
 import Usuarios from "../../Components/Usuarios";
