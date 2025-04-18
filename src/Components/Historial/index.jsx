@@ -420,7 +420,7 @@ export default function Historial() {
   visible={isPredictionModalVisible}
   onOk={() => {
     if (pendingUpdate) {
-      axios.put(`http://localhost:8000/api/pacientes/${pendingUpdate.id}/`, pendingUpdate, { withCredentials: true })
+      axios.put(`https://sleepdisorder-detector.duckdns.org/api/pacientes/${pendingUpdate.id}/`, pendingUpdate, { withCredentials: true })
         .then(() => {
           message.success("Paciente actualizado correctamente");
           setIsPredictionModalVisible(false);
