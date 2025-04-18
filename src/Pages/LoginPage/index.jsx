@@ -1,6 +1,5 @@
 import React from "react";
 import Login from "../../Components/Login";
-import ToastNotification from "../../Components/ToastNotification";
 import Layout from "../../Components/Layout";
 
 
@@ -9,7 +8,6 @@ function LoginPage() {
       <>
       <Layout>
       <Login />
-      <ToastNotification />
       </Layout>
       
       </>
