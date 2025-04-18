@@ -13,7 +13,7 @@ const Usuarios = () => {
   const [form] = Form.useForm();
   const [passwordForm] = Form.useForm();
 
-  const API_URL = "http://localhost:8000/api/usuarios/";
+  const API_URL = "https://sleepdisorder-detector.duckdns.org/api/usuarios/";
 
   // 🔥 Cargar la lista de usuarios
   const fetchUsuarios = async () => {
