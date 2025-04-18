@@ -53,7 +53,7 @@ const Graficos = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/estadisticas/", { withCredentials: true })
+      .get("https://sleepdisorder-detector.duckdns.org/api/estadisticas/", { withCredentials: true })
       .then((response) => {
         setStats(response.data);
         setLoading(false);
