@@ -63,7 +63,7 @@ const EvalForm = () => {
     };
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/save_patient/",
+        "https://sleepdisorder-detector.duckdns.org/api/save_patient/",
         dataToSend,
         { withCredentials: true }
       );
