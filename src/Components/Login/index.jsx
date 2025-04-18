@@ -18,7 +18,7 @@ const Login = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/login/",
+        "https://sleepdisorder-detector.duckdns.org/api/login/",
         {
           username: values.username,
           password: values.password,
