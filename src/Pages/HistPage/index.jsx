@@ -1,5 +1,4 @@
 import React from "react";
-import ToastNotification from "../../Components/ToastNotification";
 import Layout from "../../Components/Layout";
 import Historial from "../../Components/Historial";
 
@@ -9,7 +8,6 @@ function HistPage() {
       <>
       <Layout>
       <Historial />
-      <ToastNotification />
       </Layout>
       
       </>
