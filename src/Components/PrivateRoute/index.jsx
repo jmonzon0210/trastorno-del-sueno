@@ -10,10 +10,10 @@ const PrivateRoute = ({ roles, component: Component }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/token/refresh/", { withCredentials: true })
+      .get("https://sleepdisorder-detector.duckdns.org/api/token/refresh/", { withCredentials: true })
       .then(() => {
         console.log("Token refrescado con éxito");
-        return axios.get("http://localhost:8000/api/user/", { withCredentials: true });
+        return axios.get("https://sleepdisorder-detector.duckdns.org/api/user/", { withCredentials: true });
       })
       .then((response) => {
         console.log("Datos del usuario obtenidos:", response.data);
