@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       // Llama al endpoint de logout para invalidar tokens y eliminar cookies
-      await axios.post(https://sleepdisorder-detector.duckdns.org/api/logout/", {}, { withCredentials: true });
+      await axios.post("https://sleepdisorder-detector.duckdns.org/api/logout/", {}, { withCredentials: true });
       setUser(null); // Limpia el estado del usuario
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
