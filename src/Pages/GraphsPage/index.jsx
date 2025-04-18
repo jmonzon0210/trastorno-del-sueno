@@ -1,6 +1,5 @@
 import React from "react";
 import Graficos from "../../Components/Graficos";
-import ToastNotification from "../../Components/ToastNotification";
 import Layout from "../../Components/Layout";
 
 
@@ -9,7 +8,6 @@ function GraphsPage() {
       <>
       <Layout>
       <Graficos />
-      <ToastNotification />
       </Layout>
       
       </>
