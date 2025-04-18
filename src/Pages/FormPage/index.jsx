@@ -1,6 +1,5 @@
 import React from "react";
 import EvalForm from "../../Components/EvalForm";
-import ToastNotification from "../../Components/ToastNotification";
 import Layout from "../../Components/Layout";
 
 
@@ -9,7 +8,6 @@ function FormPage() {
       <>
       <Layout>
       <EvalForm />
-      <ToastNotification />
       </Layout>
       
       </>
