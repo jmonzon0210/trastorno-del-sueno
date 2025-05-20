@@ -11,9 +11,12 @@ const EvalForm = () => {
   const [prob0, setProb0] = useState(null);
   const [prob1, setProb1] = useState(null);
   const [lastValues, setLastValues] = useState(null);
-  const [loadingGuardar, setLoadingGuardar] = useState(false); // Nuevo estado
+  const [loading, setLoading] = useState(false); // Nuevo estado
+  const [current, setCurrent] = useState(0);
+
 
   const onFinish = async (values) => {
+    setLoading(true); 
     const fieldOrder = [
       "sexo",
       "edad",
@@ -48,17 +51,19 @@ const EvalForm = () => {
       console.log(resp.data.prediccion)
       setProb0(resp.data.probabilidad_0);
       setProb1(resp.data.probabilidad_1);
+      setLoading(false);
       setIsModalOpen(true);
       setLastValues(values); // Guardar los valores para usarlos luego
 
     } catch {
       message.error("Error al realizar la predicción");
+      setLoading(false);
     }
   };
 
   const handleSavePatient = async () => {
     if (!lastValues || prediction === null) return;
-    setLoadingGuardar(true); // Inicia el spinner
+    setLoading(true); 
     const dataToSend = {
       nombre_completo: lastValues.nombre_completo,
       carnet_identidad: lastValues.carnet_identidad,
@@ -85,7 +90,7 @@ const EvalForm = () => {
             message.error("Error al guardar el paciente");
           }
     }
-    setLoadingGuardar(false); // Detiene el spinner
+    setLoading(false); // Detiene el spinner
   };
 
   const initialValues = {
@@ -113,7 +118,7 @@ const EvalForm = () => {
   return (
     <div className="flex items-center justify-center bg-gray-100 px-4 py-12 h-full">
       <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md">
-        <PacienteForm form={form} onFinish={onFinish} initialValues={initialValues} />
+        <PacienteForm form={form} onFinish={onFinish} initialValues={initialValues} loading={loading} current={current} setCurrent={setCurrent}/>
 
         <PredictionModal
           visible={isModalOpen}
@@ -124,7 +129,7 @@ const EvalForm = () => {
           predictionProb0={prob0}
           okText={"Guardar"}
           cancelText={"Cerrar"}
-          confirmLoading={loadingGuardar} // <-- Nuevo prop
+          confirmLoading={loading} // <-- Nuevo prop
         />
       </div>
     </div>
