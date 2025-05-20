@@ -85,7 +85,6 @@ const EvalForm = () => {
             message.error("Error al guardar el paciente");
           }
     }
-    }
     setLoadingGuardar(false); // Detiene el spinner
   };
 
