@@ -13,10 +13,8 @@ const stepsConfig = [
   { title: "Tratamientos", fields: ["higienico_dietetico", "cognitivo_conductual", "medicamentoso"] },
 ];
 
-export default function PacienteForm({ form, initialValues, onFinish, steps = stepsConfig }) {
-  const [current, setCurrent] = useState(0);
-  const [loading, setLoading] = useState(false);
-
+export default function PacienteForm({ form, initialValues, onFinish, steps = stepsConfig, loading, current, setCurrent }) {
+ 
   useEffect(() => {
     if (initialValues) {
       form.setFieldsValue(initialValues);
@@ -35,13 +33,7 @@ export default function PacienteForm({ form, initialValues, onFinish, steps = st
   const prev = () => setCurrent(current - 1);
 
   const handleFinish = async (values) => {
-    setLoading(true);
-    try {
-      await onFinish(values);
-      setCurrent(0);
-    } finally {
-      setLoading(false);
-    }
+    await onFinish(values);
   };
 
   return (
