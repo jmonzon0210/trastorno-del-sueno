@@ -9,7 +9,7 @@ export default function PredictionModal({
   predictionProb0,
   okText,
   cancelText,
-
+  confirmLoading, // <-- Nuevo prop
 }) {
   return (
     <Modal
@@ -19,7 +19,7 @@ export default function PredictionModal({
       onCancel={onCancel}
       okText={okText}
       cancelText={cancelText}
-      
+      confirmLoading={confirmLoading} // <-- Spinner en botón OK
     >
       <p>
         Diagnóstico:  {""}
