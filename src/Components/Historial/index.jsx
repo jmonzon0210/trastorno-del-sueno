@@ -469,7 +469,7 @@ export default function Historial() {
     if (pendingUpdate) {
       axios.put(`https://sleepdisorder-detector.duckdns.org/api/pacientes/${pendingUpdate.id}/`, pendingUpdate, { withCredentials: true })
         .then(() => {
-          axios.patch(`https://sleepdisorder-detector.duckdns.org/api/pacientes/${diagnosticoPaciente.id}/`, {
+          axios.patch(`https://sleepdisorder-detector.duckdns.org/api/pacientes/${pendingUpdate.id}/`, {
               diagnostico_real: null
             }, { withCredentials: true })
             })
