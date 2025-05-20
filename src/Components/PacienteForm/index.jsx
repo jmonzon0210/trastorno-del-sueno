@@ -7,7 +7,7 @@ import HowToRegIcon from '@mui/icons-material/HowToReg';
 const { Step } = Steps;
 
 const stepsConfig = [
-  { title: "Antecedentes Médicos", fields: ["nombre_completo","carnet_identidad","sexo", "edad"] },
+  { title: "Antecedentes Médicos", fields: ["nombre_completo", "carnet_identidad","sexo", "edad"] },
   { title: "Factores de Riesgo", fields: ["ant_patologicos_fam", "ant_pre_peri_postnatales_positivos", "alteraciones_anatomicas", "consumo_medicamentos", "consumo_toxicos", "exp_medios_pantallas"] },
   { title: "Consecuencias", fields: ["trastorno_neurodesarrollo", "obesidad", "hipertension_arterial", "trastornos_aprendizaje", "trastornos_comportamiento", "res_insulina", "cefalea", "depresion"] },
   { title: "Tratamientos", fields: ["higienico_dietetico", "cognitivo_conductual", "medicamentoso"] },
@@ -15,6 +15,7 @@ const stepsConfig = [
 
 export default function PacienteForm({ form, initialValues, onFinish, steps = stepsConfig }) {
   const [current, setCurrent] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (initialValues) {
@@ -34,8 +35,13 @@ export default function PacienteForm({ form, initialValues, onFinish, steps = st
   const prev = () => setCurrent(current - 1);
 
   const handleFinish = async (values) => {
-    await onFinish(values); // Llama la función original
-    setCurrent(0); // Vuelve al primer paso
+    setLoading(true);
+    try {
+      await onFinish(values);
+      setCurrent(0);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -439,22 +445,22 @@ export default function PacienteForm({ form, initialValues, onFinish, steps = st
           )}
           {current === steps.length - 1 && (
            <Button
-           type="primary"
-            htmlType="submit"
-            shape="circle"
-            style={{
-              
-              width: 40,
-              height: 40,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
-              fontSize: 18,
-            }}
-          >
-            <HowToRegIcon style={{ margin: 0, fontSize: 20, color:"White" }} />
-          </Button>
+              type="primary"
+              htmlType="submit"
+              shape="circle"
+              loading={loading}
+              style={{
+                width: 40,
+                height: 40,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
+                fontSize: 18,
+              }}
+            >
+              <HowToRegIcon style={{ margin: 0, fontSize: 20, color:"White" }} />
+            </Button>
           )}
         </div>
       </Form>
