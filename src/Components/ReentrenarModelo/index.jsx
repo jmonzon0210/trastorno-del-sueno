@@ -30,7 +30,7 @@ export default function ReentrenarModelo() {
   const fetchLogs = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:8000/api/retrain_logs/", { withCredentials: true });
+      const response = await axios.get("https://sleepdisorder-detector.duckdns.org/api/retrain_logs/", { withCredentials: true });
       setLogs(response.data);
     } catch {
       message.error("No se pudieron cargar los logs de reentrenamiento.");
@@ -41,7 +41,7 @@ export default function ReentrenarModelo() {
   const handleRetrainModel = async () => {
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:8000/api/reentrenar_modelo/", {}, { withCredentials: true });
+      const response = await axios.post("https://sleepdisorder-detector.duckdns.org/api/reentrenar_modelo/", {}, { withCredentials: true });
       message.success("El modelo de IA se ha reentrenado.");
       setMetrics({
         precision: response.data.precision,
