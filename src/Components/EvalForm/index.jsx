@@ -10,7 +10,8 @@ const EvalForm = () => {
   const [prediction, setPrediction] = useState(null);
   const [prob0, setProb0] = useState(null);
   const [prob1, setProb1] = useState(null);
-  const [lastValues, setLastValues] = useState(null); // Para guardar los últimos valores del formulario
+  const [lastValues, setLastValues] = useState(null);
+  const [loadingGuardar, setLoadingGuardar] = useState(false); // Nuevo estado
 
   const onFinish = async (values) => {
     const fieldOrder = [
@@ -38,7 +39,7 @@ const EvalForm = () => {
     const orderedValues = fieldOrder.map((f) => Number(values[f]));
     try {
       const resp = await axios.post(
-        "https://sleepdisorder-detector.duckdns.org/api/predecir/",
+        "http://localhost:8000/api/predecir/",
         { variables: orderedValues },
         { withCredentials: true }
       );
@@ -57,25 +58,25 @@ const EvalForm = () => {
 
   const handleSavePatient = async () => {
     if (!lastValues || prediction === null) return;
+    setLoadingGuardar(true); // Inicia el spinner
     const dataToSend = {
-      nombre_completo: nombre_completo,
-      carnet_identidad: carnet_identidad,
+      nombre_completo: lastValues.nombre_completo,
+      carnet_identidad: lastValues.carnet_identidad,
       ...lastValues,
       resultado: prediction,
     };
     try {
       const response = await axios.post(
-        "https://sleepdisorder-detector.duckdns.org/api/save_patient/",
+        "http://localhost:8000/api/save_patient/",
         dataToSend,
         { withCredentials: true }
       );
-      console.log(response.data);
       message.success("Paciente guardado correctamente");
+      setIsModalOpen(false);
     } catch (error) {
-      console.error(error);
       message.error("Error al guardar el paciente");
     }
-    setIsModalOpen(false);
+    setLoadingGuardar(false); // Detiene el spinner
   };
 
   const initialValues = {
@@ -107,15 +108,15 @@ const EvalForm = () => {
 
         <PredictionModal
           visible={isModalOpen}
-          onOk={handleSavePatient} // Guardar paciente al aceptar
+          onOk={handleSavePatient}
           onCancel={() => setIsModalOpen(false)}
           predictionResult={prediction}
           predictionProb1={prob1}
           predictionProb0={prob0}
           okText={"Guardar"}
           cancelText={"Cerrar"}
+          confirmLoading={loadingGuardar} // <-- Nuevo prop
         />
-        
       </div>
     </div>
   );
