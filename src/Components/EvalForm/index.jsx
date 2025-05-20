@@ -38,7 +38,7 @@ const EvalForm = () => {
     const orderedValues = fieldOrder.map((f) => Number(values[f]));
     try {
       const resp = await axios.post(
-        "http://localhost:8000/api/predecir/",
+        "https://sleepdisorder-detector.duckdns.org/api/predecir/",
         { variables: orderedValues },
         { withCredentials: true }
       );
@@ -65,7 +65,7 @@ const EvalForm = () => {
     };
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/save_patient/",
+        "https://sleepdisorder-detector.duckdns.org/api/save_patient/",
         dataToSend,
         { withCredentials: true }
       );
