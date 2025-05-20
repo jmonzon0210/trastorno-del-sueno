@@ -28,6 +28,8 @@ export default function Historial() {
   const [isDiagnosticoModalVisible, setIsDiagnosticoModalVisible] = useState(false);
   const [diagnosticoPaciente, setDiagnosticoPaciente] = useState(null);
   const [nuevoDiagnostico, setNuevoDiagnostico] = useState(null);
+ const [current, setCurrent] = useState(0);
+
     
   useEffect(() => {
     obtenerPacientes();
@@ -90,6 +92,7 @@ export default function Historial() {
   const handleEditSubmit = () => {
     form.validateFields()
       .then((values) => {
+        setLoading(true);
         // Transformar los valores "Sí"/"No" a 1/0
         const transformedValues = {
           ...values,
@@ -150,19 +153,25 @@ export default function Historial() {
             setPendingUpdate({ ...transformedValues, id: editingPatient.id, resultado: response.data.prediccion });
             setIsEditModalVisible(false);
             setIsPredictionModalVisible(true);
+            setLoading(false);
+            setCurrent(0);
           })
           .catch((error) => {
             console.error("Error al procesar la solicitud:", error);
             message.error("Error al procesar la solicitud");
-          });
+            setLoading(false);
+            setCurrent(0)
+          })
+          ;
       })
       .catch((error) => {
-        console.error("Complete los campos correctamente:", error);
-        message.error("Por favor complete los campos correctamente");
+        console.error("error:", error);
+        message.error("Ha ocurrido un error al procesar la solicitud");
       });
   };
 
   const handleDelete = (id) => {
+    setLoading(true);
     axios.delete(`https://sleepdisorder-detector.duckdns.org/api/pacientes/${id}/`)
       .then(() => {
         const updatedData = data.filter((item) => item.id !== id);
@@ -173,6 +182,9 @@ export default function Historial() {
       .catch((error) => {
         console.error("Error al eliminar el paciente:", error);
         message.error("Error al eliminar el paciente");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -211,6 +223,7 @@ export default function Historial() {
         onConfirm={() => handleDelete(record.id)}
         okText="Sí"
         cancelText="No"
+        okButtonProps={{ loading: loading === record.id }}
       >
         <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <DeleteIcon style={{ fontSize: 18, color: "#ff4d4f" }} />
@@ -391,6 +404,7 @@ export default function Historial() {
             onClick={exportToCSV}
             className="w-full sm:w-auto"
             style={{ background: "#d9f7be", borderColor: "#b7eb8f", color: "#389e0d" }}
+            confirmLoading={loading}
           >
             Exportar a CSV
           </Button>
@@ -399,6 +413,7 @@ export default function Historial() {
             onClick={exportToPDF}
             className="w-full sm:w-auto"
             style={{ background: "#fff1f0", borderColor: "#ffa39e", color: "#cf1322" }}
+            confirmLoading={loading}
           >
             Exportar a PDF
           </Button>
@@ -430,29 +445,32 @@ export default function Historial() {
           <Select.Option value={0}>Negativo</Select.Option>
         </Select>
       </div>
-          <Popconfirm
-          title="¿Estás seguro de cambiar o confirmar el diagnóstico?"
-          onConfirm={() => {
-            axios.patch(`https://sleepdisorder-detector.duckdns.org/api/pacientes/${diagnosticoPaciente.id}/`, {
-              resultado: nuevoDiagnostico,
-              diagnostico_real: nuevoDiagnostico
-            }, { withCredentials: true })
-              .then(() => {
-                message.success("Diagnóstico actualizado correctamente");
-                setIsDiagnosticoModalVisible(false);
-                obtenerPacientes();
-              })
-              .catch(() => {
-                message.error("Error al actualizar el diagnóstico");
-              });
-          }}
-          okText="Sí"
-          cancelText="No"
-        >
-          <Button type="primary" block>
-            Confirmar
-          </Button>
-        </Popconfirm>
+         <Popconfirm
+              title="¿Estás seguro de cambiar o confirmar el diagnóstico?"
+              onConfirm={async () => {
+                setLoading(true);
+                try {
+                  await axios.patch(`https://sleepdisorder-detector.duckdns.org/api/pacientes/${diagnosticoPaciente.id}/`, {
+                    resultado: nuevoDiagnostico,
+                    diagnostico_real: nuevoDiagnostico
+                  }, { withCredentials: true });
+                  message.success("Diagnóstico actualizado correctamente");
+                  setIsDiagnosticoModalVisible(false);
+                  obtenerPacientes();
+                } catch (error) {
+                  message.error("Error al actualizar el diagnóstico");
+                } finally {
+                  setLoading(false);
+                }
+              }}
+              okText="Sí"
+              cancelText="No"
+              confirmLoading={loading}
+            >
+              <Button type="primary" block loading={loading}>
+                Confirmar
+              </Button>
+            </Popconfirm>
     </Modal>
     <Modal
         title="Editar Paciente"
@@ -460,13 +478,14 @@ export default function Historial() {
         onCancel={() => setIsEditModalVisible(false)}
         footer={null}
       >
-        <PacienteForm form={form} initialValues={editingPatient} onFinish={handleEditSubmit}/>
+        <PacienteForm form={form} initialValues={editingPatient} onFinish={handleEditSubmit} loading={loading} current={current} setCurrent={setCurrent}/>
       </Modal>
 
       <PredictionModal
   visible={isPredictionModalVisible}
   onOk={() => {
     if (pendingUpdate) {
+      setLoading(true)
       axios.put(`https://sleepdisorder-detector.duckdns.org/api/pacientes/${pendingUpdate.id}/`, pendingUpdate, { withCredentials: true })
         .then(() => {
           axios.patch(`https://sleepdisorder-detector.duckdns.org/api/pacientes/${pendingUpdate.id}/`, {
@@ -485,6 +504,7 @@ export default function Historial() {
         .finally(() => {
           setPendingUpdate(null);
           setIsPredictionModalVisible(false);
+          setLoading(false)
         });
     } else {
       setIsPredictionModalVisible(false);
@@ -496,6 +516,7 @@ export default function Historial() {
   predictionProb0={predictionProb0}
   okText={"Actualizar"}
   cancelText={"Cerrar"}
+  confirmLoading={loading} // <-- Spinner en botón OK
 />
     </div>
   );
