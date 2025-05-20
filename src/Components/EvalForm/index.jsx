@@ -74,7 +74,17 @@ const EvalForm = () => {
       message.success("Paciente guardado correctamente");
       setIsModalOpen(false);
     } catch (error) {
-      message.error("Error al guardar el paciente");
+      if (
+            error.response &&
+            error.response.data &&
+            error.response.data.carnet_identidad &&
+            error.response.data.carnet_identidad[0].includes("already exists")
+          ) {
+            message.error("Ya existe un paciente con ese carnet de identidad.");
+          } else {
+            message.error("Error al guardar el paciente");
+          }
+    }
     }
     setLoadingGuardar(false); // Detiene el spinner
   };
