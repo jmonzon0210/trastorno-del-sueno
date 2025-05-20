@@ -7,7 +7,7 @@ import HowToRegIcon from '@mui/icons-material/HowToReg';
 const { Step } = Steps;
 
 const stepsConfig = [
-  { title: "Antecedentes Médicos", fields: ["sexo", "edad"] },
+  { title: "Antecedentes Médicos", fields: ["nombre_completo","carnet_identidad","sexo", "edad"] },
   { title: "Factores de Riesgo", fields: ["ant_patologicos_fam", "ant_pre_peri_postnatales_positivos", "alteraciones_anatomicas", "consumo_medicamentos", "consumo_toxicos", "exp_medios_pantallas"] },
   { title: "Consecuencias", fields: ["trastorno_neurodesarrollo", "obesidad", "hipertension_arterial", "trastornos_aprendizaje", "trastornos_comportamiento", "res_insulina", "cefalea", "depresion"] },
   { title: "Tratamientos", fields: ["higienico_dietetico", "cognitivo_conductual", "medicamentoso"] },
