@@ -12,9 +12,9 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       try {
         // Primero intenta refrescar el token
-        await axios.get("http://localhost:8000/api/token/refresh/", { withCredentials: true });
+        await axios.get("https://sleepdisorder-detector.duckdns.org/api/token/refresh/", { withCredentials: true });
         // Si el refresh es exitoso, obtén los datos del usuario
-        const response = await axios.get("http://localhost:8000/api/user/", { withCredentials: true });
+        const response = await axios.get("https://sleepdisorder-detector.duckdns.org/api/user/", { withCredentials: true });
         setUser({ ...response.data, isAuthenticated: true });
       } catch (error) {
         console.error("Error al verificar autenticación:", error);
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       // Llama al endpoint de logout para invalidar tokens y eliminar cookies
-      await axios.post("http://localhost:8000/api/logout/", {}, { withCredentials: true });
+      await axios.post("https://sleepdisorder-detector.duckdns.org/api/logout/", {}, { withCredentials: true });
       setUser(null); // Limpia el estado del usuario
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
