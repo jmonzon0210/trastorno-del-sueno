@@ -444,7 +444,7 @@ export default function PacienteForm({ form, initialValues, onFinish, steps = st
           </Button>
           )}
           {current === steps.length - 1 && (
-           <Button
+            <Button
               type="primary"
               htmlType="submit"
               shape="circle"
@@ -459,7 +459,9 @@ export default function PacienteForm({ form, initialValues, onFinish, steps = st
                 fontSize: 18,
               }}
             >
-              <HowToRegIcon style={{ margin: 0, fontSize: 20, color:"White" }} />
+              {!loading && (
+                <HowToRegIcon style={{ margin: 0, fontSize: 20, color: "white" }} />
+              )}
             </Button>
           )}
         </div>
