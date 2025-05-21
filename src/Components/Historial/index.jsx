@@ -172,7 +172,7 @@ export default function Historial() {
 
   const handleDelete = (id) => {
     setLoading(true);
-    axios.delete(`https://sleepdisorder-detector.duckdns.org/api/pacientes/${id}/`)
+    axios.delete(`https://sleepdisorder-detector.duckdns.org/api/pacientes/${id}/`, { withCredentials: true })
       .then(() => {
         const updatedData = data.filter((item) => item.id !== id);
         setData(updatedData);
