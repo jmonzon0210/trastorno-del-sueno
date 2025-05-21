@@ -50,15 +50,35 @@ export default function PacienteForm({ form, initialValues, onFinish, steps = st
         {/* Paso 0 */}
         <div style={{ display: current === 0 ? "block" : "none", width: "100%" }}>
         <Row gutter={16}>
-            <Col span={12}>
+           <Col span={12}>
               <Form.Item
                 name="nombre_completo"
                 label="Nombre Completo"
-                rules={[{ required: true, message: "Por favor ingresa el nombre completo" }]}
+                rules={[
+                  { required: true, message: "Por favor ingresa el nombre completo" },
+                  {
+                    validator: (_, value) => {
+                      if (!value) return Promise.resolve();
+                      // Solo letras y espacios, mínimo dos palabras
+                      const regex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+                      if (!regex.test(value)) {
+                        return Promise.reject("Solo se permiten letras y espacios");
+                      }
+                      const palabras = value.trim().split(/\s+/);
+                      if (palabras.length < 2) {
+                        return Promise.reject("Debe ingresar al menos nombre y apellido");
+                      }
+                      if (value.length < 5) {
+                        return Promise.reject("El nombre completo es demasiado corto");
+                      }
+                      return Promise.resolve();
+                    }
+                  }
+                ]}
               >
                 <Input style={{ width: "100%" }} />
               </Form.Item>
-              </Col>
+            </Col>
               <Col span={12}>
               
              
