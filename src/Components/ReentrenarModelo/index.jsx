@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Button, message, Modal, Popconfirm } from "antd";
 import axios from "axios";
 import Tabla from "../Tabla";
+import ClassificationReportTable from "../ClassificationReportTable";
+
 
 const columns = [
   {
@@ -15,6 +17,21 @@ const columns = [
     dataIndex: "usuario",
     key: "usuario",
   },
+  {
+    title: "Total Pacientes",
+    dataIndex: "total_pacientes",
+    key: "total_pacientes",
+  },
+  
+    {
+    title: "Reporte de Clasificación",
+    dataIndex: "classification_report_test",
+    key: "classification_report_test",
+    render: (text) => (
+      <pre style={{ fontSize: 12, whiteSpace: "pre-wrap" }}>{text}</pre>
+    ),
+  },
+ 
 ];
 
 export default function ReentrenarModelo() {
@@ -61,11 +78,12 @@ export default function ReentrenarModelo() {
   }, []);
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", padding: 24 }}>
+   <div style={{ display: "flex", justifyContent: "center", padding: 24 }}>
       <div
         style={{
           width: "100%",
-          maxWidth: 500,
+          maxWidth: 1200, // <-- más ancho
+          minWidth: 900,  // <-- mínimo recomendado
           background: "#fff",
           borderRadius: 8,
           boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
@@ -85,14 +103,14 @@ export default function ReentrenarModelo() {
              <Button
                type="primary"
                loading={loading}
-               style={{ flex: 1 }}
+               
              >
                Reentrenar modelo de IA
              </Button>
            </Popconfirm>
            <Button
              onClick={fetchLogs}
-             style={{ flex: 1 }}
+            
            >
              Recargar historial
            </Button>
@@ -172,9 +190,9 @@ export default function ReentrenarModelo() {
               </table>
             </div>
             <b>Reporte de Clasificación</b>
-            <pre style={{ background: "#f7f7f7", padding: 8, borderRadius: 4, fontSize: 13 }}>
-              {metrics.classification_report}
-            </pre>
+            <div>
+            <ClassificationReportTable report={metrics.classification_report} />
+            </div>
           </div>
         </Modal>
       </div>

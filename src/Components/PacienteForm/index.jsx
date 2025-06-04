@@ -1,5 +1,5 @@
-import { Form, Select, InputNumber, Input, Button, Steps, message, Row, Col } from "antd";
-import { useEffect, useState } from "react";
+import { Form, Select, InputNumber, Button, Steps, message, Row, Col } from "antd";
+import { useEffect, useRef } from "react";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
@@ -13,12 +13,13 @@ const stepsConfig = [
   { title: "Tratamientos", fields: ["higienico_dietetico", "cognitivo_conductual", "medicamentoso"] },
 ];
 
-export default function PacienteForm({ form, initialValues, onFinish, steps = stepsConfig }) {
-  const [current, setCurrent] = useState(0);
+export default function PacienteForm({ form, initialValues, onFinish, steps = stepsConfig, loading, current, setCurrent }) {
+  const initialized = useRef(false);
 
   useEffect(() => {
-    if (initialValues) {
+    if (initialValues && !initialized.current) {
       form.setFieldsValue(initialValues);
+      initialized.current = true;
     }
   }, [initialValues, form]);
 
@@ -27,15 +28,14 @@ export default function PacienteForm({ form, initialValues, onFinish, steps = st
       await form.validateFields(steps[current].fields);
       setCurrent(current + 1);
     } catch {
-      message.error("Por favor completa los campos requeridos");
+      message.error("Por favor complete correctamente los campos requeridos");
     }
   };
 
   const prev = () => setCurrent(current - 1);
 
   const handleFinish = async (values) => {
-    await onFinish(values); // Llama la función original
-    setCurrent(0); // Vuelve al primer paso
+    await onFinish(values);
   };
 
   return (
@@ -50,111 +50,8 @@ export default function PacienteForm({ form, initialValues, onFinish, steps = st
         onFinish={handleFinish}
       >
         {/* Paso 0 */}
-        <div style={{ display: current === 0 ? "block" : "none", width: "100%" }}>
-        <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="nombre_completo"
-                label="Nombre Completo"
-                rules={[{ required: true, message: "Por favor ingresa el nombre completo" }]}
-              >
-                <Input style={{ width: "100%" }} />
-              </Form.Item>
-              </Col>
-              <Col span={12}>
-              
-             
-            <Form.Item
-              name="carnet_identidad"
-              label="Carnet de Identidad"
-              rules={[
-                { required: true, message: "Por favor ingresa el Carnet de Identidad" },
-                {
-                  validator: (_, value) => {
-                    if (!value) return Promise.resolve();
-                    if (!/^\d{11}$/.test(value)) {
-                      return Promise.reject("El carnet debe tener 11 dígitos numéricos");
-                    }
-                    const aa = value.substring(0, 2);
-                    const mm = value.substring(2, 4);
-                    const dd = value.substring(4, 6);
-
-                    const hoy = new Date();
-                    const yearActual = hoy.getFullYear();
-                    const yearCorto = parseInt(aa, 10);
-
-                    let year;
-                    if (yearCorto + 2000 <= yearActual && yearCorto + 2000 >= yearActual - 18) {
-                      year = yearCorto + 2000;
-                    } else {
-                      year = yearCorto + 1900;
-                    }
-
-                    const month = parseInt(mm, 10) - 1;
-                    const day = parseInt(dd, 10);
-                    const fechaNacimiento = new Date(year, month, day);
-
-                    if (
-                      fechaNacimiento.getFullYear() !== year ||
-                      fechaNacimiento.getMonth() !== month ||
-                      fechaNacimiento.getDate() !== day
-                    ) {
-                      return Promise.reject("La fecha en el carnet no es válida");
-                    }
-
-                    const edad = yearActual - fechaNacimiento.getFullYear() - (hoy < new Date(yearActual, month, day) ? 1 : 0);
-                    if (edad < 0 || edad > 18) {
-                      return Promise.reject("El paciente debe tener entre 0 y 18 años");
-                    }
-                    return Promise.resolve();
-                  }
-                }
-              ]}
-            >
-              <Input
-                style={{ width: "100%" }}
-                maxLength={11}
-                onChange={e => {
-                  const value = e.target.value;
-                  if (/^\d{11}$/.test(value)) {
-                    const aa = value.substring(0, 2);
-                    const mm = value.substring(2, 4);
-                    const dd = value.substring(4, 6);
-
-                    const hoy = new Date();
-                    const yearActual = hoy.getFullYear();
-                    const yearCorto = parseInt(aa, 10);
-
-                    let year;
-                    if (yearCorto + 2000 <= yearActual && yearCorto + 2000 >= yearActual - 18) {
-                      year = yearCorto + 2000;
-                    } else {
-                      year = yearCorto + 1900;
-                    }
-
-                    const month = parseInt(mm, 10) - 1;
-                    const day = parseInt(dd, 10);
-                    const fechaNacimiento = new Date(year, month, day);
-
-                    const edad = yearActual - fechaNacimiento.getFullYear() - (hoy < new Date(yearActual, month, day) ? 1 : 0);
-                    if (
-                      fechaNacimiento.getFullYear() === year &&
-                      fechaNacimiento.getMonth() === month &&
-                      fechaNacimiento.getDate() === day &&
-                      edad >= 0 && edad <= 18
-                    ) {
-                      form.setFieldsValue({ edad }); // Esto actualiza el campo edad
-                    } else {
-                      form.setFieldsValue({ edad: undefined }); // Limpia si no es válido
-                    }
-                  } else {
-                    form.setFieldsValue({ edad: undefined }); // Limpia si no es válido
-                  }
-                }}
-              />
-            </Form.Item>
-
-            </Col>
+        <div className={current === 0 ? "" : "step-hidden"}>
+          <Row gutter={16}>
             <Col span={12}>
               <Form.Item
                 name="sexo"
@@ -173,17 +70,17 @@ export default function PacienteForm({ form, initialValues, onFinish, steps = st
                 label="Edad"
                 rules={[
                   { required: true, message: "Ingresa la edad" },
-                  { type: "number", min: 0, max: 18, message: "0–18 años" },
+                  { type: "number", min: 0, max: 18, message: "La edad debe ser entre 0 y 18 años" },
                 ]}
               >
-              <InputNumber style={{ width: "100%" }} disabled/>
+              <InputNumber style={{ width: "100%" }}/>
               </Form.Item>
             </Col>
           </Row>
           </div>
         {/* Paso 1 */}
-        <div style={{ display: current === 1 ? "block" : "none", width: "100%" }}>
-          <Row gutter={16}>
+         <div className={current === 1 ? "" : "step-hidden"}>
+            <Row gutter={16}>
             <Col span={12}>
               <Form.Item
                 name="ant_patologicos_fam"
@@ -259,7 +156,7 @@ export default function PacienteForm({ form, initialValues, onFinish, steps = st
           </Row>
           </div>
         {/* Paso 2 */}
-        <div style={{ display: current === 2 ? "block" : "none", width: "100%" }}>
+        <div className={current === 2 ? "" : "step-hidden"}>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
@@ -360,7 +257,7 @@ export default function PacienteForm({ form, initialValues, onFinish, steps = st
           </Row>
           </div>
         {/* Paso 3 */}
-        <div style={{ display: current === 3 ? "block" : "none", width: "100%" }}>
+        <div className={current === 3 ? "" : "step-hidden"} style={{ width: "100%" }}>
         <Row gutter={16}>
             <Col span={12}>
               <Form.Item
@@ -438,23 +335,25 @@ export default function PacienteForm({ form, initialValues, onFinish, steps = st
           </Button>
           )}
           {current === steps.length - 1 && (
-           <Button
-           type="primary"
-            htmlType="submit"
-            shape="circle"
-            style={{
-              
-              width: 40,
-              height: 40,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
-              fontSize: 18,
-            }}
-          >
-            <HowToRegIcon style={{ margin: 0, fontSize: 20, color:"White" }} />
-          </Button>
+            <Button
+              type="primary"
+              htmlType="submit"
+              shape="circle"
+              loading={loading}
+              style={{
+                width: 40,
+                height: 40,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
+                fontSize: 18,
+              }}
+            >
+              {!loading && (
+                <HowToRegIcon style={{ margin: 0, fontSize: 20, color: "white" }} />
+              )}
+            </Button>
           )}
         </div>
       </Form>

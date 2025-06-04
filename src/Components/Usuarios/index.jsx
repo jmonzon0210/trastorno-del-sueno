@@ -77,8 +77,12 @@ const Usuarios = () => {
       fetchUsuarios();
       setIsModalVisible(false);
     } catch (error) {
+      if (error.response && error.response.data && error.response.data.error) {
+      message.error(error.response.data.error);
+    } else {
       message.error("Error al guardar el usuario.");
     }
+  }
 
     setLoading(false);
   };

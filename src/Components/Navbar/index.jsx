@@ -60,14 +60,33 @@ const Navbar = () => {
           <button onClick={toggleSidebar}>
             {sidebarOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
-          {user && <span>Hola, {user.username}</span>}
+          {user && <span>Hola, {user.role}</span>}
         </div>
-        <div>
-          {user ? (
-            <button onClick={handleLogout}>Cerrar sesión</button>
-          ) : (
-            <NavLink to="/login">Iniciar sesión</NavLink>
-          )}
+       <div>
+          {!user && <NavLink to="/login"
+                      className={({ isActive }) =>
+                        `nav-link ${isActive ? "nav-link-active" : ""}`
+                      }
+                    >
+                      <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <LoginIcon style={{ fontSize: 18, color: "#ffffff" }} />
+                        Iniciar sesión
+                      </span>
+                    </NavLink>}
+          {user && (
+                    <NavLink
+                      to="/login"
+                      onClick={handleLogout}
+                      className={({ isActive }) =>
+                        `nav-link ${isActive ? "nav-link-active" : ""}`
+                      }
+                    >
+                      <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <LogoutIcon style={{ fontSize: 18, color: "#ffffff" }} />
+                        Cerrar sesión
+                      </span>
+                    </NavLink>
+                  )}
         </div>
       </nav>
 
@@ -157,7 +176,7 @@ const Navbar = () => {
 
       {/* Navbar completa en pantallas grandes */}
       <nav className="hidden md:flex justify-between items-center px-6 py-4 bg-gray-800 text-white">
-        <div>{user && <span className="user-greeting">Hola, {user.username}</span>}</div>
+        <div>{user && <span className="user-greeting">Hola, {user.role}</span>}</div>
         <ul className="flex gap-6">
   {user?.role === "Especialista" && (
     <>

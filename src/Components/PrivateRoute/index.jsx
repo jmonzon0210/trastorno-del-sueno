@@ -20,6 +20,7 @@ const PrivateRoute = ({ roles, component: Component }) => {
         setUser({
           username: response.data.username,
           role: response.data.role,
+          id: response.data.id,
           isAuthenticated: true,
         });
       })

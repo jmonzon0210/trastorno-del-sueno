@@ -7,9 +7,10 @@ export default function PredictionModal({
   predictionResult,
   predictionProb1,
   predictionProb0,
+  savedPatientId,
   okText,
   cancelText,
-
+  confirmLoading, // <-- Nuevo prop
 }) {
   return (
     <Modal
@@ -19,7 +20,14 @@ export default function PredictionModal({
       onCancel={onCancel}
       okText={okText}
       cancelText={cancelText}
-      
+      confirmLoading={confirmLoading}
+      footer={(_, { OkBtn, CancelBtn }) => (
+      <>
+        <OkBtn />
+        {/* Solo muestra CancelBtn si cancelText no es null y no hay savedPatientId */}
+        {!savedPatientId && <CancelBtn />}
+      </>
+    )}
     >
       <p>
         Diagnóstico:  {""}
@@ -31,7 +39,12 @@ export default function PredictionModal({
         </Tag>
         <br />
         Probabilidad Positivo: {predictionProb1 ? (predictionProb1 * 100).toFixed(2) : 0}%<br />
-        Probabilidad Negativo: {predictionProb0 ? (predictionProb0 * 100).toFixed(2) : 0}%
+        Probabilidad Negativo: {predictionProb0 ? (predictionProb0 * 100).toFixed(2) : 0}%<br />
+        {savedPatientId && (
+          <div>
+            Paciente guardado con ID: <span style={{ fontWeight: "bold" }}>{savedPatientId}</span>
+          </div>
+        )}
       </p>
     </Modal>
   );

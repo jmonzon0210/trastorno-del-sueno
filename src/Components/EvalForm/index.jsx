@@ -10,9 +10,14 @@ const EvalForm = () => {
   const [prediction, setPrediction] = useState(null);
   const [prob0, setProb0] = useState(null);
   const [prob1, setProb1] = useState(null);
-  const [lastValues, setLastValues] = useState(null); // Para guardar los últimos valores del formulario
+  const [lastValues, setLastValues] = useState(null);
+  const [loading, setLoading] = useState(false); // Nuevo estado
+  const [current, setCurrent] = useState(0);
+  const [savedPatientId, setSavedPatientId] = useState(null);
+
 
   const onFinish = async (values) => {
+    setLoading(true); 
     const fieldOrder = [
       "sexo",
       "edad",
@@ -47,36 +52,40 @@ const EvalForm = () => {
       console.log(resp.data.prediccion)
       setProb0(resp.data.probabilidad_0);
       setProb1(resp.data.probabilidad_1);
+      setLoading(false);
       setIsModalOpen(true);
       setLastValues(values); // Guardar los valores para usarlos luego
 
     } catch {
       message.error("Error al realizar la predicción");
+      setLoading(false);
     }
   };
 
   const handleSavePatient = async () => {
-    if (!lastValues || prediction === null) return;
-    const dataToSend = {
-      nombre_completo: nombre_completo,
-      carnet_identidad: carnet_identidad,
-      ...lastValues,
-      resultado: prediction,
-    };
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/api/save_patient/",
-        dataToSend,
-        { withCredentials: true }
-      );
-      console.log(response.data);
-      message.success("Paciente guardado correctamente");
-    } catch (error) {
-      console.error(error);
-      message.error("Error al guardar el paciente");
-    }
-    setIsModalOpen(false);
+  if (!lastValues || prediction === null) return;
+  setLoading(true); 
+  const dataToSend = {
+    ...lastValues,
+    resultado: prediction,
   };
+  try {
+    const resp = await axios.post(
+      "http://localhost:8000/api/save_patient/",
+      dataToSend,
+      { withCredentials: true }
+    );
+    setSavedPatientId(resp.data.id); // Guarda el ID
+    message.success(`Paciente guardado con ID ${resp.data.id}`);
+    form.resetFields(); // Resetea el formulario
+    setCurrent(0); // Vuelve al primer paso
+  } catch (error) {
+    setSavedPatientId(null);
+    message.error("Error al guardar el paciente");
+    console.error("Error al guardar el paciente:", error);
+  }
+  setLoading(false);
+};
 
   const initialValues = {
     sexo: 0,
@@ -100,22 +109,29 @@ const EvalForm = () => {
     medicamentoso: 0,
   };
 
+ const handleCloseModal = () => {
+  setIsModalOpen(false);
+  setSavedPatientId(null);
+  form.resetFields();      // <-- Resetea el formulario
+  setCurrent(0);           // <-- Vuelve al primer paso
+};
+
   return (
     <div className="flex items-center justify-center bg-gray-100 px-4 py-12 h-full">
       <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md">
-        <PacienteForm form={form} onFinish={onFinish} initialValues={initialValues} />
-
+        <PacienteForm form={form} onFinish={onFinish} initialValues={initialValues} loading={loading} current={current} setCurrent={setCurrent}/>
         <PredictionModal
-          visible={isModalOpen}
-          onOk={handleSavePatient} // Guardar paciente al aceptar
-          onCancel={() => setIsModalOpen(false)}
-          predictionResult={prediction}
-          predictionProb1={prob1}
-          predictionProb0={prob0}
-          okText={"Guardar"}
-          cancelText={"Cerrar"}
-        />
-        
+        visible={isModalOpen}
+        onOk={savedPatientId ? handleCloseModal : handleSavePatient}
+        onCancel={savedPatientId ? undefined : handleCloseModal}
+        predictionResult={prediction}
+        predictionProb1={prob1}
+        predictionProb0={prob0}
+        savedPatientId={savedPatientId}
+        okText={savedPatientId ? "Cerrar" : "Guardar"}
+        cancelText={savedPatientId ? null : "Cancelar"}
+        confirmLoading={loading}
+      />
       </div>
     </div>
   );
