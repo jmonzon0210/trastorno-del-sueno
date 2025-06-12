@@ -1,4 +1,5 @@
 import Layout from "../../Components/Layout";
+import logo from "../../assets/logo.png"
 
 function Home() {
   return (
@@ -6,7 +7,7 @@ function Home() {
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4 py-8">
   <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col md:flex-row items-center max-w-4xl w-full">
     <div className="w-full md:w-1/2">
-      <img src="../../../assets/sleep.png" alt="Sleep" className="w-full h-auto rounded-lg" />
+      <img src={logo} alt="Sleep" className="w-full h-auto rounded-lg" />
     </div>
     <div className="w-full md:w-1/2 flex flex-col items-center justify-center text-center mt-6 md:mt-0 md:ml-6">
       <h1 className="text-3xl font-bold">
