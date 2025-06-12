@@ -45,7 +45,7 @@ const EvalForm = () => {
     const orderedValues = fieldOrder.map((f) => Number(values[f]));
     try {
       const resp = await axios.post(
-        "http://localhost:8000/api/predecir/",
+        "https://sleepdisorder-detector.duckdns.org/api/predecir/",
         { variables: orderedValues },
         { withCredentials: true }
       );
@@ -70,7 +70,7 @@ const EvalForm = () => {
     };
     try {
       const resp = await axios.post(
-        "http://localhost:8000/api/save_patient/",
+        "https://sleepdisorder-detector.duckdns.org/api/save_patient/",
         dataToSend,
         { withCredentials: true }
       );
@@ -120,7 +120,7 @@ const EvalForm = () => {
     setSelectedMetric(metricType);
     try {
       const resp = await fetch(
-        "http://localhost:8000/api/metricas_modelo_actual/",
+        "https://sleepdisorder-detector.duckdns.org/api/metricas_modelo_actual/",
         { credentials: "include" }
       );
       const data = await resp.json();
@@ -151,7 +151,7 @@ const EvalForm = () => {
         setLoadingMetrics(true);
         try {
           const resp = await fetch(
-            "http://localhost:8000/api/metricas_modelo_actual/",
+            "https://sleepdisorder-detector.duckdns.org/api/metricas_modelo_actual/",
             { credentials: "include" }
           );
           const data = await resp.json();
