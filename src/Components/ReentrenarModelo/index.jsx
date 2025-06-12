@@ -86,7 +86,7 @@ export default function ReentrenarModelo() {
   const fetchLogs = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:8000/api/retrain_logs/", { withCredentials: true });
+      const response = await axios.get("https://sleepdisorder-detector.duckdns.org/api/retrain_logs/", { withCredentials: true });
       const logsWithActions = response.data.map((log) => ({
         ...log,
         onShowModal: (type) => {
@@ -105,7 +105,7 @@ export default function ReentrenarModelo() {
 
   // Nueva función para actualizar el número de pacientes no reentrenados
 const fetchNoReentrenados = () => {
-  axios.get("http://localhost:8000/api/pacientes_no_reentrenados/", { withCredentials: true })
+  axios.get("https://sleepdisorder-detector.duckdns.org/api/pacientes_no_reentrenados/", { withCredentials: true })
     .then(res => {
       setNoReentrenados(res.data.nuevos_pacientes || 0);
     })
@@ -137,7 +137,7 @@ const fetchNoReentrenados = () => {
   const handleRetrainModel = async () => {
     setLoading(true);
     try {
-      await axios.post("http://localhost:8000/api/reentrenar_modelo/", {}, { withCredentials: true });
+      await axios.post("https://sleepdisorder-detector.duckdns.org/api/reentrenar_modelo/", {}, { withCredentials: true });
       message.success("El modelo de IA se ha reentrenado.");
       fetchLogs();
       fetchNoReentrenados(); // <-- Actualiza el número después de reentrenar
