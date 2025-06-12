@@ -5,12 +5,12 @@ import { SearchOutlined, MoreOutlined, ReloadOutlined, FilePdfFilled, FileExcelF
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import Papa from "papaparse";
-import PacienteForm from "../PacienteForm";
-import PredictionModal from "../PredictionModal";
+import PacienteForm from "../PacienteForm/FormularioPacientes";
+import PredictionModal from "../PredictionModal/PredictionModal";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { CheckCircleOutlined } from "@ant-design/icons";
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import Tabla from "../Tabla";
+import Tabla from "../Tabla/Tabla";
 import { useAuth } from "../../context";
 
 export default function Historial() {
@@ -23,8 +23,8 @@ export default function Historial() {
   const [form] = Form.useForm();
   const [isPredictionModalVisible, setIsPredictionModalVisible] = useState(false);
   const [predictionResult, setPredictionResult] = useState(null);
-  const [predictionProb1, setPredictionProb1] = useState(null);
-  const [predictionProb0, setPredictionProb0] = useState(null);
+  const [predictionProb, setPredictionProb] = useState(null);
+  const [savedPatientId, setSavedPatientId] = useState(null);
   const [pendingUpdate, setPendingUpdate] = useState(null);
   const [isDiagnosticoModalVisible, setIsDiagnosticoModalVisible] = useState(false);
   const [diagnosticoPaciente, setDiagnosticoPaciente] = useState(null);
@@ -32,6 +32,10 @@ export default function Historial() {
   const [current, setCurrent] = useState(0);
   const { user } = useAuth();
   const [soloMisPacientes, setSoloMisPacientes] = useState(false);
+  const [metricsVisible, setMetricsVisible] = useState(false);
+  const [metrics, setMetrics] = useState(null);
+  const [loadingMetrics, setLoadingMetrics] = useState(false);
+  const [selectedMetric, setSelectedMetric] = useState(null);
 
 
     
@@ -45,7 +49,12 @@ export default function Historial() {
       .then((response) => {
         const formattedData = formatData(response.data);
         setData(formattedData);
-        setFilteredData(formattedData);
+        // Si el filtro de "solo mis pacientes" está activo, filtra aquí
+        if (soloMisPacientes && user) {
+          setFilteredData(formattedData.filter(p => String(p.creado_por) === String(user.id)));
+        } else {
+          setFilteredData(formattedData);
+        }
       })
       .catch((error) => {
         console.error("Error al obtener los datos:", error);
@@ -142,16 +151,13 @@ export default function Historial() {
           transformedValues.cognitivo_conductual,
           transformedValues.medicamentoso,
         ];
-        console.log("Datos enviados al backend:", transformedValues);
-        console.log("Datos enviados al modelo", orderedValues)
 
         // Enviar los datos al modelo de IA
         return axios.post("http://localhost:8000/api/predecir/", { variables: orderedValues },
           { withCredentials: true })
           .then((response) => {
             setPredictionResult(response.data.prediccion);
-            setPredictionProb1(response.data.probabilidad_1);
-            setPredictionProb0(response.data.probabilidad_0);
+            setPredictionProb(response.data.probabilidad); // Usa el campo correcto como en EvalForm
             setPendingUpdate({ ...transformedValues, id: editingPatient.id, resultado: response.data.prediccion });
             setIsEditModalVisible(false);
             setIsPredictionModalVisible(true);
@@ -163,8 +169,7 @@ export default function Historial() {
             message.error("Error al procesar la solicitud");
             setLoading(false);
             setCurrent(0)
-          })
-          ;
+          });
       })
       .catch((error) => {
         console.error("error:", error);
@@ -192,9 +197,7 @@ export default function Historial() {
 
   const handleSearch = (value) => {
     const filtered = data.filter((item) =>
-      Object.values(item).some((val) =>
-        String(val).toLowerCase().includes(value.toLowerCase())
-      )
+      String(item.id).toLowerCase().includes(value.toLowerCase())
     );
     setSearchText(value);
     setFilteredData(filtered);
@@ -230,88 +233,219 @@ export default function Historial() {
           Confirmar Diagnóstico
         </span>
       </Menu.Item>
-      <Menu.Item key="eliminar" disabled={!esCreador}>
-        <Popconfirm
-          title="¿Estás seguro de eliminar este paciente?"
-          onConfirm={() => esCreador && handleDelete(record.id)}
-          okText="Sí"
-          cancelText="No"
-          confirmLoading={loading === record.id}
-          disabled={!esCreador}
-        >
-          <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <DeleteIcon style={{ fontSize: 18, color: "#ff4d4f" }} />
-            Eliminar
-          </span>
-        </Popconfirm>
+      <Menu.Item
+        key="eliminar"
+        disabled={!esCreador}
+        onClick={() => {}} // Evita warning de onClick vacío
+      >
+        <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <DeleteIcon style={{ fontSize: 18, color: "#ff4d4f" }} />
+          Eliminar
+        </span>
       </Menu.Item>
     </Menu>
   );
 };
 
 
-  const columns = [
-    { title: "ID", dataIndex: "id", key: "id", fixed: "left", sorter: (a, b) => a.id - b.id, defaultSortOrder: 'descend', },
-    {
-      title: "Resultado",
-      dataIndex: "resultado",
-      key: "resultado",
-      render: (text, record) => (
-        <span>
-          {text === "Positivo" ? (
-            <Tag color="red">Positivo</Tag>
-          ) : (
-            <Tag color="green">Negativo</Tag>
-          )}
-          {record.diagnostico_real !== null && (
-            <CheckCircleTwoTone twoToneColor="#52c41a" title="Diagnóstico verificado" style={{ marginLeft: 6 }} />
-          )}
-        </span>
-      ),
-    },
-    
-    { title: "Sexo", dataIndex: "sexo", key: "sexo" },
-    { title: "Edad", dataIndex: "edad", key: "edad" },
-    { title: () => <div>Antecedentes<br />Patológicos Familiares</div>, dataIndex: "ant_patologicos_fam", key: "ant_patologicos_fam" },
-    { title: () => <div>Antecedentes<br />Pre/Pri/PostnatalesPositivos</div>, dataIndex: "ant_pre_peri_postnatales_positivos", key: "ant_pre_peri_postnatales_positivos" },
-    { title: () => <div>Alteraciones<br />Anatómicas</div>, dataIndex: "alteraciones_anatomicas", key: "alteraciones_anatomicas" },
-    { title: () => <div>Consumo de<br />Medicamentos</div>, dataIndex: "consumo_medicamentos", key: "consumo_medicamentos" },
-    { title: () => <div>Consumo de <br />Tóxicos</div>, dataIndex: "consumo_toxicos", key: "consumo_toxicos" },
-    { title: () => <div>Exposición a medios <br />de pantallas</div>, dataIndex: "exp_medios_pantallas", key: "exp_medios_pantallas" },
-    { title: () => <div>Trastornos del <br />Neurodesarrollo</div>, dataIndex: "trastorno_neurodesarrollo", key: "trastorno_neurodesarrollo" },
-    { title: "Obesidad", dataIndex: "obesidad", key: "obesidad" },
-    { title: () => <div>Hipertensión<br />Arterial</div>, dataIndex: "hipertension_arterial", key: "hipertension_arterial" },
-    { title: () => <div>Trastornos del <br />aprendizaje</div>, dataIndex: "trastornos_aprendizaje", key: "trastornos_aprendizaje" },
-    { title: () => <div>Trastornos del <br />comportamiento</div>, dataIndex: "trastornos_comportamiento", key: "trastornos_comportamiento" },
-    { title: "Cefalea", dataIndex: "cefalea", key: "cefalea" },
-    { title: () => <div>Resistencia a <br />la insulina</div>, dataIndex: "res_insulina", key: "res_insulina" },
-    { title: "Depresión", dataIndex: "depresion", key: "depresion" },
-    { title: () => <div>Tratamiento<br />Higiénico/Dietético</div>, dataIndex: "higienico_dietetico", key: "higienico_dietetico" },
-    { title: () => <div>Tratamiento <br />Cognitivo/Conductual</div>, dataIndex: "cognitivo_conductual", key: "cognitivo_conductual" },
-    { title: () => <div>Tratamiento <br />Medicamentoso</div>, dataIndex: "medicamentoso", key: "medicamentoso" },
-    
-   {
-  title: "",
-  key: "acciones",
-  fixed: "right",
-  render: (_, record) => (
-    <Dropdown overlay={menuAcciones(record)} trigger={['click']}>
-     <Button
-        shape="circle"
-        icon={<MoreOutlined style={{ fontSize: 20, color: "#555" }} />}
-        style={{
-          background: "#f0f0f0",
-          border: "none",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      />
-    </Dropdown>
-  ),
-},
-  ];
+// Utilidad para generar filtros únicos para cada columna
+const getColumnFilters = (dataIndex) => {
+  const uniqueValues = [...new Set(data.map(item => item[dataIndex]))].filter(v => v !== undefined && v !== null);
+  return uniqueValues.map(val => ({
+    text: String(val),
+    value: val,
+  }));
+};
+
+const columns = [
+  { 
+    title: "ID", 
+    dataIndex: "id", 
+    key: "id", 
+    fixed: "left", 
+    sorter: (a, b) => a.id - b.id, 
+    defaultSortOrder: 'descend',
+    filters: getColumnFilters("id"),
+    onFilter: (value, record) => String(record.id) === String(value),
+  },
+  {
+    title: "Resultado",
+    dataIndex: "resultado",
+    key: "resultado",
+    filters: getColumnFilters("resultado"),
+    onFilter: (value, record) => record.resultado === value,
+    render: (text, record) => (
+      <span>
+        {text === "Positivo" ? (
+          <Tag color="red">Positivo</Tag>
+        ) : (
+          <Tag color="green">Negativo</Tag>
+        )}
+        {record.diagnostico_real !== null && (
+          <CheckCircleTwoTone twoToneColor="#52c41a" title="Diagnóstico verificado" style={{ marginLeft: 6 }} />
+        )}
+      </span>
+    ),
+  },
+  { 
+    title: "Sexo", 
+    dataIndex: "sexo", 
+    key: "sexo", 
+    filters: getColumnFilters("sexo"), 
+    onFilter: (value, record) => record.sexo === value 
+  },
+  { 
+    title: "Edad", 
+    dataIndex: "edad", 
+    key: "edad", 
+    filters: getColumnFilters("edad"), 
+    onFilter: (value, record) => String(record.edad) === String(value) 
+  },
+  { 
+    title: () => <div>Antecedentes<br />Patológicos Familiares</div>, 
+    dataIndex: "ant_patologicos_fam", 
+    key: "ant_patologicos_fam", 
+    filters: getColumnFilters("ant_patologicos_fam"), 
+    onFilter: (value, record) => record.ant_patologicos_fam === value 
+  },
+  { 
+    title: () => <div>Antecedentes<br />Pre/Pri/PostnatalesPositivos</div>, 
+    dataIndex: "ant_pre_peri_postnatales_positivos", 
+    key: "ant_pre_peri_postnatales_positivos",
+    filters: getColumnFilters("ant_pre_peri_postnatales_positivos"),
+    onFilter: (value, record) => record.ant_pre_peri_postnatales_positivos === value
+  },
+  { 
+    title: () => <div>Alteraciones<br />Anatómicas</div>, 
+    dataIndex: "alteraciones_anatomicas", 
+    key: "alteraciones_anatomicas",
+    filters: getColumnFilters("alteraciones_anatomicas"),
+    onFilter: (value, record) => record.alteraciones_anatomicas === value
+  },
+  { 
+    title: () => <div>Consumo de<br />Medicamentos</div>, 
+    dataIndex: "consumo_medicamentos", 
+    key: "consumo_medicamentos",
+    filters: getColumnFilters("consumo_medicamentos"),
+    onFilter: (value, record) => record.consumo_medicamentos === value
+  },
+  { 
+    title: () => <div>Consumo de <br />Tóxicos</div>, 
+    dataIndex: "consumo_toxicos", 
+    key: "consumo_toxicos",
+    filters: getColumnFilters("consumo_toxicos"),
+    onFilter: (value, record) => record.consumo_toxicos === value
+  },
+  { 
+    title: () => <div>Exposición a medios <br />de pantallas</div>, 
+    dataIndex: "exp_medios_pantallas", 
+    key: "exp_medios_pantallas",
+    filters: getColumnFilters("exp_medios_pantallas"),
+    onFilter: (value, record) => record.exp_medios_pantallas === value
+  },
+  { 
+    title: () => <div>Trastornos del <br />Neurodesarrollo</div>, 
+    dataIndex: "trastorno_neurodesarrollo", 
+    key: "trastorno_neurodesarrollo",
+    filters: getColumnFilters("trastorno_neurodesarrollo"),
+    onFilter: (value, record) => record.trastorno_neurodesarrollo === value
+  },
+  { 
+    title: "Obesidad", 
+    dataIndex: "obesidad", 
+    key: "obesidad",
+    filters: getColumnFilters("obesidad"),
+    onFilter: (value, record) => record.obesidad === value
+  },
+  { 
+    title: () => <div>Hipertensión<br />Arterial</div>, 
+    dataIndex: "hipertension_arterial", 
+    key: "hipertension_arterial",
+    filters: getColumnFilters("hipertension_arterial"),
+    onFilter: (value, record) => record.hipertension_arterial === value
+  },
+  { 
+    title: () => <div>Trastornos del <br />aprendizaje</div>, 
+    dataIndex: "trastornos_aprendizaje", 
+    key: "trastornos_aprendizaje",
+    filters: getColumnFilters("trastornos_aprendizaje"),
+    onFilter: (value, record) => record.trastornos_aprendizaje === value
+  },
+  { 
+    title: () => <div>Trastornos del <br />comportamiento</div>, 
+    dataIndex: "trastornos_comportamiento", 
+    key: "trastornos_comportamiento",
+    filters: getColumnFilters("trastornos_comportamiento"),
+    onFilter: (value, record) => record.trastornos_comportamiento === value
+  },
+  { 
+    title: "Cefalea", 
+    dataIndex: "cefalea", 
+    key: "cefalea",
+    filters: getColumnFilters("cefalea"),
+    onFilter: (value, record) => record.cefalea === value
+  },
+  { 
+    title: () => <div>Resistencia a <br />la insulina</div>, 
+    dataIndex: "res_insulina", 
+    key: "res_insulina",
+    filters: getColumnFilters("res_insulina"),
+    onFilter: (value, record) => record.res_insulina === value
+  },
+  { 
+    title: "Depresión", 
+    dataIndex: "depresion", 
+    key: "depresion",
+    filters: getColumnFilters("depresion"),
+    onFilter: (value, record) => record.depresion === value
+  },
+  { 
+    title: () => <div>Tratamiento<br />Higiénico/Dietético</div>, 
+    dataIndex: "higienico_dietetico", 
+    key: "higienico_dietetico",
+    filters: getColumnFilters("higienico_dietetico"),
+    onFilter: (value, record) => record.higienico_dietetico === value
+  },
+  { 
+    title: () => <div>Tratamiento <br />Cognitivo/Conductual</div>, 
+    dataIndex: "cognitivo_conductual", 
+    key: "cognitivo_conductual",
+    filters: getColumnFilters("cognitivo_conductual"),
+    onFilter: (value, record) => record.cognitivo_conductual === value
+  },
+  { 
+    title: () => <div>Tratamiento <br />Medicamentoso</div>, 
+    dataIndex: "medicamentoso", 
+    key: "medicamentoso",
+    filters: getColumnFilters("medicamentoso"),
+    onFilter: (value, record) => record.medicamentoso === value
+  },
+ 
+  {
+    title: "",
+    key: "acciones",
+    fixed: "right",
+    render: (_, record) => (
+      <Dropdown
+        overlay={menuAcciones(record)}
+        trigger={['click']}
+      >
+        <Button
+          shape="circle"
+          icon={<MoreOutlined style={{ fontSize: 20, color: "#555" }} />}
+          style={{
+            background: "#f0f0f0",
+            border: "none",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        />
+      </Dropdown>
+    ),
+  },
+];
   const exportToCSV = () => {
     const headers = [
       "ID", "Resultado", "Confirmado", "Sexo", "Edad",
@@ -448,6 +582,7 @@ export default function Historial() {
         {
           resultado: nuevoDiagnostico,
           diagnostico_real: nuevoDiagnostico,
+          incluido_en_reentrenamiento: false
         },
         { withCredentials: true }
       );
@@ -462,12 +597,75 @@ export default function Historial() {
   };
       
 
+// Función para mostrar métricas al seleccionar en el menú
+const handleShowMetrics = async (metricType) => {
+  setLoadingMetrics(true);
+  setSelectedMetric(metricType);
+  try {
+    const resp = await fetch(
+      "http://localhost:8000/api/metricas_modelo_actual/",
+      { credentials: "include" }
+    );
+    const data = await resp.json();
+    setMetrics(data);
+    setMetricsVisible(true);
+  } catch {
+    setMetrics({ error: "No se pudieron obtener las métricas." });
+    setMetricsVisible(true);
+  }
+  setLoadingMetrics(false);
+};
+
+// Menú de métricas que usa handleShowMetrics
+const metricsMenu = (
+  <Menu
+    onClick={({ key }) => handleShowMetrics(key)}
+    items={[
+      { key: "reporte", label: "Reporte de Clasificación" },
+      { key: "matriz", label: "Matriz de Confusión" },
+      { key: "importancia", label: "Top 5 características" },
+    ]}
+  />
+);
+
+const handleClosePredictionModal = () => {
+  setIsPredictionModalVisible(false);
+  setSavedPatientId(null);
+  setPredictionResult(null);
+  setPredictionProb(null);
+  setPendingUpdate(null);
+  setCurrent(0);
+};
+
+// Efecto para cargar métricas automáticamente al abrir el modal de predicción
+useEffect(() => {
+  if (isPredictionModalVisible) {
+    (async () => {
+      setLoadingMetrics(true);
+      try {
+        const resp = await fetch(
+          "http://localhost:8000/api/metricas_modelo_actual/",
+          { credentials: "include" }
+        );
+        const data = await resp.json();
+        setMetrics(data);
+      } catch {
+        setMetrics({ error: "No se pudieron obtener las métricas." });
+      }
+      setLoadingMetrics(false);
+    })();
+  }
+}, [isPredictionModalVisible]);
+
+
+
+
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:justify-center sm:items-center gap-4 mt-4 mb-4">
       <div className="flex gap-2 w-full sm:w-auto">
           <Input
-            placeholder="Buscar..."
+            placeholder="Buscar por ID"
             prefix={<SearchOutlined />}
             value={searchText}
             onChange={(e) => handleSearch(e.target.value)}
@@ -557,25 +755,38 @@ export default function Historial() {
               </Button>
             </Popconfirm>
     </Modal>
+   
     <Modal
+        
         title="Editar Paciente"
         visible={isEditModalVisible}
         onCancel={() => setIsEditModalVisible(false)}
         footer={null}
+        width={900}
       >
+           <div className="max-w-4xl w-full mx-auto p-6 bg-white rounded-lg shadow-md">
+
         <PacienteForm form={form} initialValues={editingPatient} onFinish={handleEditSubmit} loading={loading} current={current} setCurrent={setCurrent}/>
+        </div>
       </Modal>
+      
 
       <PredictionModal
         visible={isPredictionModalVisible}
-        onOk={handlePrediction}
-        onCancel={() => setIsPredictionModalVisible(false)}
+        onOk={pendingUpdate ? handlePrediction : handleClosePredictionModal}
+        onCancel={handleClosePredictionModal}
         predictionResult={predictionResult}
-        predictionProb1={predictionProb1}
-        predictionProb0={predictionProb0}
-        okText={"Actualizar"}
-        cancelText={"Cerrar"}
+        predictionProb={predictionProb}
+        savedPatientId={savedPatientId}
+        okText={pendingUpdate ? "Actualizar" : "Cerrar"}
+        cancelText={pendingUpdate ? "Cerrar" : null}
         confirmLoading={loading}
+        metrics={metrics}
+        metricsVisible={metricsVisible}
+        setMetricsVisible={setMetricsVisible}
+        loadingMetrics={loadingMetrics}
+        metricsMenu={metricsMenu}
+        selectedMetric={selectedMetric}
       />
     </div>
   );

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "../../context";
+import { useAuth } from "../context";
 import { Form, Input, Button, Typography, message, Card } from "antd";
-import logo from "../../../public/login.png";
+import logo from "../../assets/login.png"
 
 
 

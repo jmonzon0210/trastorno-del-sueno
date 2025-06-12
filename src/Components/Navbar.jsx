@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context";
+import { useAuth } from "../context";
 import { Menu, X } from "lucide-react"; // iconos
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
@@ -134,7 +134,7 @@ const Navbar = () => {
                     `nav-link ${isActive ? "nav-link-active" : ""}`
                   }
                   >
-                    Historial
+                    Gestionar Pacientes
                   </NavLink>
                 </li>
               </>
@@ -207,7 +207,7 @@ const Navbar = () => {
             `nav-link ${isActive ? "nav-link-active" : ""}`
           }
         >
-          Historial
+          Gestionar Pacientes
         </NavLink>
       </li>
     </>

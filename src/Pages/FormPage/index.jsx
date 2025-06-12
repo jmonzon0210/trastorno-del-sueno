@@ -1,5 +1,5 @@
 import React from "react";
-import EvalForm from "../../Components/EvalForm";
+import EvalForm from "../../Components/Gestion de Pacientes/EvaluarPaciente";
 import Layout from "../../Components/Layout";
 
 

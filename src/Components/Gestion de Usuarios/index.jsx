@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Modal, Input, message, Popconfirm, Form, Select, Dropdown, Menu } from "antd";
-import { MoreOutlined } from "@ant-design/icons";
+import { MoreOutlined, SearchOutlined } from "@ant-design/icons";
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import Tabla from "../Tabla";
+import Tabla from "../Tablas/Tabla";
 
 const Usuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -17,7 +17,7 @@ const Usuarios = () => {
   const [editingUser, setEditingUser] = useState(null);
   const [form] = Form.useForm();
   const [passwordForm] = Form.useForm();
-  
+  const [searchText, setSearchText] = useState("");
 
   const API_URL = "http://localhost:8000/api/usuarios/";
 
@@ -148,18 +148,65 @@ const Usuarios = () => {
     </Menu>
   );
 
+  const getColumnFilters = (dataIndex) => {
+    const uniqueValues = [...new Set(usuarios.map(item => item[dataIndex]))].filter(v => v !== undefined && v !== null);
+    return uniqueValues.map(val => ({
+      text: String(val),
+      value: val,
+    }));
+  };
+
+  const filteredUsuarios = usuarios.filter(u =>
+    u.username.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   const columns = [
-    { title: "ID", dataIndex: "id", key: "id" },
-    { title: "Usuario", dataIndex: "username", key: "username" },
-    { title: "Email", dataIndex: "email", key: "email" },
-    { title: "Activo", dataIndex: "is_active", key: "is_active", render: (is_active) => (is_active ? "Sí" : "No") },
-    { title: "Rol", dataIndex: "role", key: "role" },
-    {
-    title: "Fecha de creación",
-    dataIndex: "date_joined",
-    key: "date_joined",
-    render: (text) => text ? new Date(text).toLocaleString() : "",
-  },
+    { 
+      title: "ID", 
+      dataIndex: "id", 
+      key: "id",
+      filters: getColumnFilters("id"),
+      onFilter: (value, record) => String(record.id) === String(value),
+    },
+    { 
+      title: "Usuario", 
+      dataIndex: "username", 
+      key: "username",
+      // Filtro removido aquí
+    },
+    { 
+      title: "Email", 
+      dataIndex: "email", 
+      key: "email",
+      filters: getColumnFilters("email"),
+      onFilter: (value, record) => record.email === value,
+    },
+    { 
+      title: "Activo", 
+      dataIndex: "is_active", 
+      key: "is_active", 
+      render: (is_active) => (is_active ? "Sí" : "No"),
+      filters: [
+        { text: "Sí", value: true },
+        { text: "No", value: false }
+      ],
+      onFilter: (value, record) => record.is_active === value,
+    },
+    { 
+      title: "Rol", 
+      dataIndex: "role", 
+      key: "role",
+      filters: getColumnFilters("role"),
+      onFilter: (value, record) => record.role === value,
+    },
+    { 
+      title: "Fecha de creación",
+      dataIndex: "date_joined",
+      key: "date_joined",
+      render: (text) => text ? new Date(text).toLocaleString() : "",
+      filters: getColumnFilters("date_joined"),
+      onFilter: (value, record) => record.date_joined === value,
+    },
     {
       title: "",
       key: "acciones",
@@ -185,17 +232,28 @@ const Usuarios = () => {
 
   return (
     <div style={{ padding: "20px" }}>
-      <Button type="primary" onClick={() => showModal()} style={{ marginBottom: 16 }}>
-        <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <PersonAddIcon style={{ fontSize: 18, color: "#FFFFFF" }} />
-          Agregar Usuario
-        </span>
-      </Button>
+      <div style={{ display: "flex", gap: 8, marginBottom: 16, alignItems: "center" }}>
+        <Input
+          placeholder="Buscar por nombre de usuario"
+          value={searchText}
+          onChange={e => setSearchText(e.target.value)}
+          style={{ width: 250 }}
+          prefix={<SearchOutlined />}
+        />
+        <Button type="primary" onClick={() => showModal()}>
+          <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <PersonAddIcon style={{ fontSize: 18, color: "#FFFFFF" }} />
+            Agregar Usuario
+          </span>
+        </Button>
+       
+        
+      </div>
 
       <Tabla
-         columns={columns}
-         dataSource={usuarios}
-         loading={loading}
+        columns={columns}
+        dataSource={filteredUsuarios}
+        loading={loading}
       />
 
       {/*  Modal para agregar/editar usuario */}

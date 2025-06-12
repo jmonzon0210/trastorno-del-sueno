@@ -1,5 +1,5 @@
 import React from "react";
-import Usuarios from "../../Components/Usuarios";
+import Usuarios from "../../Components/Gestion de Usuarios/index";
 import Layout from "../../Components/Layout";
 
 

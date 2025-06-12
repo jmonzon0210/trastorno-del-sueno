@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../context";
-import Loading from "./../Loading";
+import Loading from "../Loading";
 
 const PrivateRoute = ({ roles, component: Component }) => {
   const { user, setUser } = useAuth();
