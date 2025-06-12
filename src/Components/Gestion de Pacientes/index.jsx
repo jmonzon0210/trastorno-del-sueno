@@ -46,7 +46,7 @@ export default function Historial() {
 
   const obtenerPacientes = () => {
     setLoading(true);
-    axios.get("http://localhost:8000/api/pacientes/", { withCredentials: true })
+    axios.get("https://sleepdisorder-detector.duckdns.org/api/pacientes/", { withCredentials: true })
       .then((response) => {
         const formattedData = formatData(response.data);
         setData(formattedData);
@@ -155,7 +155,7 @@ export default function Historial() {
         ];
 
         // Enviar los datos al modelo de IA
-        return axios.post("http://localhost:8000/api/predecir/", { variables: orderedValues },
+        return axios.post("https://sleepdisorder-detector.duckdns.org/api/predecir/", { variables: orderedValues },
           { withCredentials: true })
           .then((response) => {
             setPredictionResult(response.data.prediccion);
@@ -181,7 +181,7 @@ export default function Historial() {
 
   const handleDelete = (id) => {
     setLoading(true);
-    axios.delete(`http://localhost:8000/api/pacientes/${id}/`, { withCredentials: true })
+    axios.delete(`https://sleepdisorder-detector.duckdns.org/api/pacientes/${id}/`, { withCredentials: true })
       .then(() => {
         const updatedData = data.filter((item) => item.id !== id);
         setData(updatedData);
@@ -630,9 +630,9 @@ render: (text, record) => (
   const handlePrediction= () => {
     if (pendingUpdate) {
       setLoading(true);
-      axios.put(`http://localhost:8000/api/pacientes/${pendingUpdate.id}/`, pendingUpdate, { withCredentials: true })
+      axios.put(`https://sleepdisorder-detector.duckdns.org/api/pacientes/${pendingUpdate.id}/`, pendingUpdate, { withCredentials: true })
         .then(() => {
-          return axios.patch(`http://localhost:8000/api/pacientes/${pendingUpdate.id}/`, {
+          return axios.patch(`https://sleepdisorder-detector.duckdns.org/api/pacientes/${pendingUpdate.id}/`, {
             confianza_prediccion: predictionProb,
             diagnostico_real: null
           }, { withCredentials: true });
@@ -660,7 +660,7 @@ render: (text, record) => (
     setLoading(true);
     try {
       await axios.patch(
-        `http://localhost:8000/api/pacientes/${diagnosticoPaciente.id}/`,
+        `https://sleepdisorder-detector.duckdns.org/api/pacientes/${diagnosticoPaciente.id}/`,
         {
           resultado: nuevoDiagnostico,
           diagnostico_real: nuevoDiagnostico,
@@ -686,7 +686,7 @@ const handleShowMetrics = async (metricType) => {
   setSelectedMetric(metricType);
   try {
     const resp = await fetch(
-      "http://localhost:8000/api/metricas_modelo_actual/",
+      "https://sleepdisorder-detector.duckdns.org/api/metricas_modelo_actual/",
       { credentials: "include" }
     );
     const data = await resp.json();
@@ -727,7 +727,7 @@ useEffect(() => {
       setLoadingMetrics(true);
       try {
         const resp = await fetch(
-          "http://localhost:8000/api/metricas_modelo_actual/",
+          "https://sleepdisorder-detector.duckdns.org/api/metricas_modelo_actual/",
           { credentials: "include" }
         );
         const data = await resp.json();
