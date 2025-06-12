@@ -1,5 +1,5 @@
 import Layout from "../../Components/Layout";
-import logo from "../../assets/sleep.png"
+import logo from "../../../assets/sleep.png"
 
 function Home() {
   return (
