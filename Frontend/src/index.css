@@ -1,0 +1,84 @@
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .charts-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pie-chart,
+  .bar-chart {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .bar-chart-wrapper {
+    height: 400px; /* Altura ajustada para tabletas */
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-dashboard {
+    padding: 1rem;
+  }
+
+  .historial-btn-group > button {
+    font-size: 12px !important;
+    padding: 0 6px !important;
+    min-width: 0 !important;
+    height: 28px !important;
+  }
+  .historial-btn-group .anticon {
+    font-size: 16px !important;
+  }
+
+  .pie-chart h3,
+  .bar-chart h3 {
+    font-size: 1rem;
+  }
+
+  .bar-chart-wrapper {
+    height: 350px; /* Altura ajustada para móviles */
+  }
+}
+.nav-link {
+  position: relative;
+  padding-bottom: 2px;
+  transition: color 0.2s;
+  text-decoration: none;
+  display: inline-block; /* <-- Asegúrate de esto */
+}
+.nav-link::after {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 0;
+  background: #38bdf8;
+  transition: width 0.2s;
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+}
+.nav-link:hover::after {
+  width: 100%;
+}
+.nav-link-active::after {
+  width: 100%;
+  background: #38bdf8;
+}
+
+.step-hidden {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  height: 0;
+  overflow: hidden;
+  width: 100%;
+}
